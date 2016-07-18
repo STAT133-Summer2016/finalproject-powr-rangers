@@ -4,7 +4,7 @@ library(stringr)
 library(tidyr)
 
 NoQuotations <- function(x) {
-  str_replace_all(x, "\\'*", "")
+  str_replace_all(x, "^\\'|\\'$", "")
 }
 
 y2013 <- read_csv("data/thads2013n.txt") %>%
