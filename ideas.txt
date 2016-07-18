@@ -1,0 +1,4 @@
+Add ideas of possible different analysis angles to this document.
+
+- First "proof of concept" graph could be the year on the x-axis and the average
+housing cost burden on the y-axis.
