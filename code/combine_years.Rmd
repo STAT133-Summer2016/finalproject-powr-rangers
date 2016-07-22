@@ -1,0 +1,20 @@
+---
+title: "finalproject"
+author: "William Paul"
+date: "July 14, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+files96 = sapply(paste("hads", c(seq(1985, 2001, by = 2)), ".txt", sep =""), read_csv)
+files96 = sapply(files96, function(x){mutate(x, L30 = 0.6 * L50, GL30 = 0.6 * GL50, ABL30 = 0.6 * ABL50)})
+files03 = paste("hads", c(seq(2003, 2013, by = 2)), ".txt", sep ="")
+files03 = sapply(files, read_csv)
+
+```
