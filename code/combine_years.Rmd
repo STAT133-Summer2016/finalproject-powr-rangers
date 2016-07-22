@@ -10,11 +10,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r}
 library(readr)
-library(ggplot2)
 library(dplyr)
-files96 = sapply(paste("hads", c(seq(1985, 2001, by = 2)), ".txt", sep =""), read_csv)
-files96 = sapply(files96, function(x){mutate(x, L30 = 0.6 * L50, GL30 = 0.6 * GL50, ABL30 = 0.6 * ABL50)})
-files03 = paste("hads", c(seq(2003, 2013, by = 2)), ".txt", sep ="")
-files03 = sapply(files, read_csv)
-
+mutateyears = function(data, year) {
+  mutate(data, dataset_year=year)
+}
+files96 = lapply(paste("hads", c(seq(1985, 2001, by = 2)), ".bz2", sep =""), read_csv)
+files96 = lapply(files96, data.frame, stringsAsFactors= F)
+files96 = lapply(files96, function(x){mutate(x, L30 = 0.6 * L50, GL30 = 0.6 * GL50, ABL30 = 0.6 * ABL50)})
+files96 = mapply(mutateyears, files03, as.list(seq(1985,2001,by=2)))
+files03 = paste("hads", c(seq(2003, 2013, by = 2)), ".bz2", sep ="")
+files03 = lapply(lapply(files03, read_csv), data.frame, stringsAsFactors= F)
+files03 = mapply(mutateyears, files03, as.list(seq(2003,2013,by=2)))
+new2011 = files03[[4]] %>% select(-VCHRMOV)
+c = rbind(do.call(rbind, files03[c(1,2,3,5,6)]), new2011)
 ```
