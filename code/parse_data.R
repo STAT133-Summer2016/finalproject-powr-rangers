@@ -7,7 +7,7 @@ NoQuotations <- function(x) {
   str_replace_all(x, "^\\'|\\'$", "")
 }
 
-y2013 <- read_csv("data/thads2013n.txt") %>%
+cleaned_years <- read_csv("../data/cleaned_years.csv") %>%
   setNames(str_to_lower(names(.))) %>%  
   mutate_if(is.character, NoQuotations)
   
