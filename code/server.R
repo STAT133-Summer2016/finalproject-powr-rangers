@@ -19,13 +19,13 @@ shinyServer(function(input, output) {
   output$plot <- renderPlot({ 
     
      clean_sample %>%  
-      group_by(dataset_year, ownrent) %>%  
+      group_by_("dataset_year", input$sel_var) %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
       # result. 
       summarise(burden_year = median(burden, na.rm = T)) %>%  
-      ggplot(aes(x = dataset_year,  
-                 y = burden_year,  
-                 colour = ownrent)) +  
+      ggplot(aes_string(x = "dataset_year",   
+                        y = "burden_year",   
+                        colour = input$sel_var)) +  
       geom_line()
 
   })

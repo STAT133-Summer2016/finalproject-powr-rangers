@@ -7,7 +7,8 @@ shinyUI(fluidPage(
       
       selectInput("sel_var",
                   label = "Variable",
-                  choices = names(clean_sample))
+                  choices = names(clean_sample),
+                  selected = "ownrent")
       
       ),
     
