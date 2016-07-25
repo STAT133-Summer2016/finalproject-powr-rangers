@@ -3,7 +3,9 @@
 
 # Cleaned years csv for compliance to github file size restrictions
 /data/combined_years.csv
-/data/dirty_sample.csv
+/data/clean_years.csv
+/data/clean_sample.csv
+
 
 *.zip
 
