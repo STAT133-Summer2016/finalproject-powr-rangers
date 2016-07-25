@@ -6,7 +6,7 @@ library(ggmap)
 
 # dirty_sample is just a sample of the full combined but unmodified dataset,
 # saved to a separate file for convenience:
-# sample_n(dirty_dataset, 10000)
+# sample_n(combined_years, 10000)
 dirty_sample <- read_csv("../data/dirty_sample.csv")
 
 # Cleaning the data
