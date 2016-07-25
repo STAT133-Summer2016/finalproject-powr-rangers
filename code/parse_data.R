@@ -22,15 +22,6 @@ clean_years <- combined_years %>%
                           levels = c("1", "2"), 
                           labels = c("own", "rent")))
 
-#plot
-clean %>% 
-  group_by(dataset_year) %>% 
-  summarise(burden_year = mean(burden)) %>% 
-  ggplot(aes(x = dataset_year, y = burden_year)) + 
-  geom_line()
-  
- 
-  
 set.seed(1337)  
 clean_sample <- sample_n(clean_years, 100000)
 
