@@ -2,7 +2,8 @@
 # Created by https://www.gitignore.io/api/r
 
 # Cleaned years csv for compliance to github file size restrictions
-/data/cleaned_years.csv
+/data/combined_years.csv
+/data/dirty_sample.csv
 
 *.zip
 
