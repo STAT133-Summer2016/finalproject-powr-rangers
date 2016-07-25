@@ -25,3 +25,6 @@ clean_years <- combined_years %>%
 set.seed(1337)  
 clean_sample <- sample_n(clean_years, 100000)
 
+#write csv files
+write_csv(clean_years, path = "../data/clean_years.csv")
+write_csv(clean_sample, path = "../data/clean_sample.csv")
