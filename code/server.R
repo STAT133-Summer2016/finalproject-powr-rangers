@@ -1,26 +1,13 @@
 library(ggplot2)
 library(dplyr)
 library(readr)
-library(maps)
-library(ggmap)
-
-# dirty_sample is just a sample of the full combined but unmodified dataset,
-# saved to a separate file for convenience:
-# sample_n(combined_years, 10000)
-dirty_sample <- read_csv("../data/dirty_sample.csv")
-
-# Cleaning the data
-clean_sample <- dirty_sample %>% 
-  setNames(str_to_lower(names(.))) %>%  
-  mutate_if(is.character, NoQuotations) %>%  
-  # -9 has been used as a marker for NA, replace them with NA
-  na_if(-9) %>%
-  mutate(ownrent = factor(ownrent,   
-                          levels = c("1", "2"), 
-                          labels = c("own", "rent")))
+library(stringr)
+ 
 
 shinyServer(function(input, output) {
-  
+ 
+clean_sample <- read_csv("../data/clean_sample.csv")
+
   output$plot <- renderPlot({ 
     
      clean_sample %>%  
