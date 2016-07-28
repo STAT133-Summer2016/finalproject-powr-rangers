@@ -7,19 +7,17 @@ library(stringr)
 shinyServer(function(input, output) {
  
 clean_sample <- read_csv("../data/clean_sample.csv")
-
   output$plot <- renderPlot({ 
-    
      clean_sample %>%  
       # Use NSE
-      group_by_("dataset_year", input$sel_var) %>%  
+      group_by_("year", input$sel_x) %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
       # result.
-      summarise(burden_year = median(burden, na.rm = T)) %>%  
+      summarise_(new_y= as.formula(paste0("~ median(",input$sel_y, ",na.rm=T)"))) %>%  
       # Use NSE
-      ggplot(aes_string(x = "dataset_year",   
-                        y = "burden_year",   
-                        colour = input$sel_var)) +  
+      ggplot(aes_string(x = "year",   
+                        y = "new_y",   
+                        colour = input$sel_x)) +  
       geom_line()
 
   })

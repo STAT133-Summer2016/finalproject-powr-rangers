@@ -5,7 +5,8 @@ library(tidyr)
 
 combined_years <- read_csv("../data/combined_years.csv",
                            # Add col_types manually to avoid parsing failures
-                           col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd")
+                           col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd",
+                           na = c("","NA", "-9", "-6", "-7"))
 
 NoQuotations <- function(x) {
   str_replace_all(x, "^\\'|\\'$", "")
@@ -15,8 +16,6 @@ NoQuotations <- function(x) {
 clean_years <- combined_years %>% 
   setNames(str_to_lower(names(.))) %>%  
   mutate_if(is.character, NoQuotations) %>%  
-  # -9 has been used as a marker for NA, replace them with NA
-  na_if(-9)  %>%
   # Clean ownrent
   mutate(ownrent = factor(ownrent,   
                           levels = c("1", "2"), 
