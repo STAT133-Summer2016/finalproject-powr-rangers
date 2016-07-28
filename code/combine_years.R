@@ -4,7 +4,7 @@ library(stringr)
 MutateYears = function(data, year) {
   # Simply marks the dataset with the year to categorize the original data.
   mutate(data, 
-         DATASET_YEAR = year)
+         YEAR = year)
   }
 UpperCaseColNames = function(frame) {
   # Years vary over the years, so this converts the column 
