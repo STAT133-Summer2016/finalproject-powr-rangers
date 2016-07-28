@@ -17,18 +17,17 @@ clean_years <- combined_years %>%
   mutate_if(is.character, NoQuotations) %>%  
   # -9 has been used as a marker for NA, replace them with NA
   na_if(-9)  %>%
+  # Clean ownrent
   mutate(ownrent = factor(ownrent,   
                           levels = c("1", "2"), 
                           labels = c("own", "rent")))
 
-  clean_sample <- mutate(clean_sample, ownrent = factor(ownrent,   
-                          levels = c("1", "2"), 
-                          labels = c("own", "rent")))
 # Free some memory
 remove(combined_years)
 
+# Make a sample for faster developing etc.
 set.seed(1337)  
-clean_sample <- sample_n(clean_years, 10000)
+clean_sample <- sample_n(clean_years, 1000)
 
 # Write csv files
 write_csv(clean_years, path = "../data/clean_years.csv")
