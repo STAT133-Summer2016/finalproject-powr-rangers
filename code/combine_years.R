@@ -79,8 +79,22 @@ second_decade = mapply(MutateYears,
          .dots=names(modern_files))
 second_old_set = do.call(rbind, 
                          second_decade)
-complete_dataset = rbind(rbind(first_old_set,  #Final combined dataset.
-                               second_old_set), 
+
+
+old_sets <- rbind(first_old_set,  
+                      second_old_set) 
+# Free some memory
+remove(first_old_set, 
+       second_old_set, 
+       base_files, 
+       first_decade, 
+       second_decade, 
+       modified_year)
+
+complete_dataset = rbind(old_sets,
                          modern_files)
+# Free some memory
+remove(old_sets, modern_files)
+
 write_csv(complete_dataset,  # Writing dataset to save intermediate result.
           "../data/combined_years.csv") 
