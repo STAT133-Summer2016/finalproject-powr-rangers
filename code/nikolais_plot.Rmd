@@ -1,4 +1,4 @@
-```{r}
+```{r, echo=F}
 library(ggplot2)
 library(dplyr)
 library(readr)
@@ -12,7 +12,6 @@ clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
     mutate(per = cut(per, 
                      breaks = c(0, 1, 2, Inf),
                      labels = c("1", "2", "3 or more")))  %>%
-    # Use NSE
     group_by(year, per) %>%  
     # Take the median instead of mean to avoid extreme observations skewing the 
     # result.
