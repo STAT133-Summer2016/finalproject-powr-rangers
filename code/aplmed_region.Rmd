@@ -1,0 +1,31 @@
+---
+title: "APL_region"
+author: "Sriharsha Kondapally"
+date: "July 30, 2016"
+output: html_document
+---
+
+
+```{r}
+library(ggplot2)
+library(readr)
+library(stringr)
+library(dplyr)
+
+col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
+
+clean_years <- read_csv("../data/clean_years.csv", col_types = col)
+
+clean_years %>%
+  group_by(dataset_year, region) %>%  
+  # Take the median instead of mean to avoid extreme observations skewing the 
+  # result.
+  summarise(new_y = median(aplmed, na.rm = T)) %>%
+  ggplot(aes(x = dataset_year,   
+                  y = new_y,   
+                  colour = region)) + geom_line() +
+  labs(x = "year", y = "Median Adjusted Income (per persons)", 
+       title = "APLmed by region")
+```
+
+This plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). IT is clear that the Northeast and the West are the most expensive regions. The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.
