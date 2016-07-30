@@ -3,10 +3,10 @@ library(dplyr)
 library(readr)
 library(stringr)
  
+clean_sample <- read_csv("../data/clean_sample.csv")
 
 shinyServer(function(input, output) {
  
-clean_sample <- read_csv("../data/clean_sample.csv")
   output$plot <- renderPlot({ 
      clean_sample %>%  
       # Use NSE

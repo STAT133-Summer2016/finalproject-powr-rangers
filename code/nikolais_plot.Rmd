@@ -1,0 +1,29 @@
+```{r, echo=F}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(stringr)
+
+col_types <- "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
+ 
+clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
+
+  clean_years %>%
+    mutate(per = cut(per, 
+                     breaks = c(0, 1, 2, Inf),
+                     labels = c("1", "2", "3 or more")))  %>%
+    group_by(year, per) %>%  
+    # Take the median instead of mean to avoid extreme observations skewing the 
+    # result.
+    summarise(new_y = median(burden, na.rm = T)) %>%
+    ggplot(aes(x = year,   
+                      y = new_y,   
+                      colour = per)) +  
+    geom_line() +
+    labs(colour = "Household size",
+         x = "Year",
+         y = "Median burden")
+```
+
+The graph shows the development of median burden (proportion of housing costs relative to household income) from 1985 to 2013. The median burden varies dramatically between households of different sizes. The highest burden through the years has been on households of one person. This is understandable, since people living alone cannot split any costs between other earners. Surprisingly, households of two people have the lowest burdens overall. Our hypothesis is that this is due to a large proportion of two-earner couples in this group. As housing cost burden is simply a household’s monthly housing cost divided by its monthly income, households where all members are earners have a higher monthly income and a lower resulting burden. In households of 3 or more people, the burden picks up again. This is likely due to a larger amount of children and / or retirees in larger households.
+Another interesting thing is the dramatic increase of burden during the buildup to the financial crisis 2000-2007. The most probable exlanation is the housing market price bubble. Once the crisis hit in 2007, the effect of dropping incomes continued to increase burdens until 2011. Only in 2013 data did the burdens start to fall from the unprecedently high levels.
