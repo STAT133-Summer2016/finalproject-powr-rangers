@@ -3,8 +3,10 @@ library(ggplot2)
 library(dplyr)
 library(readr)
 library(stringr)
+
+col_types <- "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
  
-clean_years <- read_csv("../data/clean_years.csv")
+clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
 
   clean_years %>%
     mutate(per = cut(per, 
