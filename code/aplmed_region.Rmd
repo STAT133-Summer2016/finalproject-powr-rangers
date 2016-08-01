@@ -28,4 +28,6 @@ clean_years %>%
        title = "APLmed by region")
 ```
 
-This plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). IT is clear that the Northeast and the West are the most expensive regions. The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.
+This plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). It is clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and WEst are by far the most productive (by GDP) regions in the United States. 
+
+The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.
