@@ -26,9 +26,9 @@ clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
     # Take the median instead of mean to avoid extreme observations skewing the 
     # result.
     summarise(new_y = median(burden, na.rm = T)) %>%
-    ggplot(aes(x = year,   
-                      y = new_y,   
-                      colour = per)) +  
+    ggplot(aes(x = year, 
+               y = new_y,
+               colour = per)) +  
     geom_line() +
     labs(colour = "Household size",
          x = "Year",

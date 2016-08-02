@@ -126,14 +126,14 @@ The household median monthly incomes vary between different census regions from 
 While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 
 cleanyears <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
   select(zinc2, year, region, fmtburden)%>% 
@@ -159,7 +159,7 @@ cleanyears %>%
 
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 
 
  ### faceted by region 
@@ -181,7 +181,7 @@ cleanyears %>%
 
 
 
-```{r, include = FALSE}
+```{r, echo = FALSE}
 
 cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
   select(year, zsmhc, region, fmtburden) %>% 
@@ -205,7 +205,7 @@ cleanyearsmonthly %>%
 ```
 
 
-```{r, include = FALSE}
+```{r, echo= FALSE}
 
 ### faceted by region
   cleanyearsmonthly %>%  
