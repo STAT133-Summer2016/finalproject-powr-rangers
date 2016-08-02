@@ -2,6 +2,9 @@
 
 ##### BRANCH NAMES: LambTesting
 
+
+
+##### Cleaning data for monthly costs
 cleanyears <- read_csv("clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
   select(year, zsmhc, region, fmtburden) %>% 
   filter(fmtburden != ".") %>% 
@@ -9,7 +12,7 @@ cleanyears <- read_csv("clean_years.csv", col_types = "cicciiciiciiidicidicddddd
 
 
 
-##### Cleaning data for 
+##### Cleaning data for household income
 cleanyearsmonthly <- read_csv("clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
   select(zinc2, year, region, fmtburden)%>% 
   filter(fmtburden != ".") %>% 
