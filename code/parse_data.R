@@ -27,7 +27,7 @@ remove(combined_years)
 # Make a sample for faster developing etc.
 set.seed(1337)  
 clean_sample <- sample_n(clean_years, 1000)
-
+clean_years = clean_years[sample(nrow(clean_years)),]
 # Write csv files
 write_csv(clean_years, path = "../data/clean_years.csv")
 write_csv(clean_sample, path = "../data/clean_sample.csv")
