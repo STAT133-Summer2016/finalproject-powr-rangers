@@ -6,7 +6,7 @@ library(tidyr)
 combined_years <- read_csv("../data/combined_years.csv",
                            # Add col_types manually to avoid parsing failures
                            col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd",
-                           na = c("","NA", "-9", "-6", "-7"))
+                           na = c("","NA", "-9", "-6", "-7", "'.'"))
 
 NoQuotations <- function(x) {
   str_replace_all(x, "^\\'|\\'$", "")

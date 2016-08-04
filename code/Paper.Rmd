@@ -128,7 +128,8 @@ usa_map <- map_df %>%
                      labels = NULL,
                      breaks = NULL) +
   labs(fill = "Median income") +
-  scale_fill_gradient2(midpoint = 25000)
+  scale_fill_distiller(palette = "Blues",
+                       direction = 1)
 
 ```
 
