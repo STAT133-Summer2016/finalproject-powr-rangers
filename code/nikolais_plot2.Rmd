@@ -1,0 +1,49 @@
+---
+title: "Nikolais plot 2"
+author: "Nikolai Myllymäki"
+date: "3 August 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+```
+
+
+
+```{r topic, echo=FALSE}
+# clean_years <- read_csv("../data/clean_sample.csv")
+
+counts <- clean_years %>%  
+  group_by(fmtincrelpovcat, year) %>%
+  summarise(count = n()) %>%
+  group_by(year) %>% 
+  mutate(percent = count / sum(count),  
+         fmtincrelpovcat = factor(fmtincrelpovcat, 
+                                  levels = c("1 LTE Poverty", 
+                                             "2 100-150% Poverty", 
+                                             "3 150-200% Poverty", 
+                                             "4 200%+ Poverty"),  
+                                  labels = c("Less than poverty income",   
+                                             "100-150% of poverty income",   
+                                             "150-200% of poverty income",    
+                                             "200%+ of poverty income")))
+                                                     
+
+ggplot(counts, aes(x = year, 
+                   y = percent,
+                   fill = fmtincrelpovcat)) + 
+  geom_area(alpha = 0.5) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(x = "Year",
+       y = "Precent of households",
+       fill = "Household income
+relative to poverty income")
+ 
+```
+
+
