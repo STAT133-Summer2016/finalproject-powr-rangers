@@ -16,7 +16,7 @@ library(stringr)
 
 
 ```{r topic, echo=FALSE}
-# clean_years <- read_csv("../data/clean_years.csv")
+clean_years <- read_csv("../data/clean_years.csv")
 
 counts <- clean_years %>% 
   # Group and summarise the amount of people in each poverty group each year
