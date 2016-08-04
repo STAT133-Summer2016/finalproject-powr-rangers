@@ -348,8 +348,9 @@ clean_years %>%
   summarise(new_y = median(ablmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() +
-  labs(x = "year", y = "Median Adjusted Income (per persons)", 
+                  colour = region)) + geom_line() + 
+  scale_fill_manual(name = "Region", labels = regionNames)
+  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
        title = "ABLmed by region")
 
 ```
