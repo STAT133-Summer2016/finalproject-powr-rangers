@@ -364,8 +364,9 @@ clean_years %>%
   ggplot(aes(x = year,   
                   y = new_y,   
                   colour = region)) + geom_line() +
-  labs(x = "year", y = "Median Adjusted Income (per persons)", 
-       title = "APLmed by region")
+  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
+       title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  scale_color_discrete(name = "Region", labels = regionNames)
 
 
 ```
@@ -386,16 +387,16 @@ clean_years %>%
   summarise(new_y = median(ablmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() + 
-  scale_fill_manual(name = "Region", labels = regionNames)
+                  colour = region)) + geom_line() +
   labs(x = "Year", y = "Median Adjusted Income (per persons)", 
-       title = "ABLmed by region")
+       title = "Median Income Adjusted \nfor Number of Bedrooms by region") + 
+  scale_color_discrete(name = "Region", labels = regionNames)
 
 ```
 
 The trends of the graphs here are similar to the ones in APLmed, however ABLmed signifies the median adjusted income for the number of bedrooms in a household's living quarters. 
 
-It is interesting to note that the disparity between the incomes increases between the Northeast and WEstern regions and the Midwest and South. This is liekly because those living in the Midwest and South ten dto live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
+It is interesting to note that the disparity between the incomes increases between the Northeast/Western regions and the Midwest/Southern Regions. This is liekly because those living in the Midwest and South ten dto live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
 
 The lag in the downward trend after 2008 still occurs in the plots.
 
