@@ -15,6 +15,7 @@ library(rvest)
 library(tidyr)
 library(purrr)
 library(maps)
+library(ggthemes)
 ```
 
 Summary/Intro
@@ -128,9 +129,12 @@ usa_map <- map_df %>%
                      labels = NULL,
                      breaks = NULL) +
   labs(fill = "Median income") +
-  scale_fill_distiller(palette = "Blues",
-                       direction = 1)
-
+  scale_fill_distiller(limits = c(31000, 41200), 
+                                 breaks = sort(unique(map_df$zinc2_median),
+                                               decreasing = T),
+                                 palette = "Blues", 
+                                 direction = 1,
+                                 guide = "legend")
 ```
 
 ```{r, echo=F}
