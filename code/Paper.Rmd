@@ -128,7 +128,8 @@ usa_map <- map_df %>%
                      labels = NULL,
                      breaks = NULL) +
   labs(fill = "Median income") +
-  scale_fill_gradient2(midpoint = 25000)
+  scale_fill_distiller(palette = "Blues",
+                       direction = 1)
 
 ```
 
@@ -142,6 +143,43 @@ The household median monthly incomes vary between different census regions from 
 
 While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
+```{r, echo = FALSE}
+counts <- clean_years %>% 
+  # Group and summarise the amount of people in each poverty group each year
+  group_by(fmtincrelpovcat, year) %>%
+  summarise(count = n()) %>%
+  # Clean NAs
+  na.omit() %>%
+  # Group again by year to calculate relative percentages per year
+  group_by(year) %>% 
+  mutate(percent = count / sum(count),  
+         # Clean the labels
+         fmtincrelpovcat = factor(fmtincrelpovcat, 
+                                  levels = c("1 LTE Poverty", 
+                                             "2 100-150% Poverty", 
+                                             "3 150-200% Poverty", 
+                                             "4 200%+ Poverty"),  
+                                  labels = c("Less than poverty income",   
+                                             "100-150% of poverty income",   
+                                             "150-200% of poverty income",    
+                                             "> 200% of poverty income"),
+                                  ordered = T))
+
+ggplot(counts, aes(x = year, 
+                   y = percent,
+                   fill = fmtincrelpovcat)) + 
+  geom_area(alpha = 0.5) +
+  # Use a nice colour palette
+  scale_fill_brewer(palette = "RdBu", 
+                    # Reverse the order of legend items to match the
+                    # stacking order
+                    guide = guide_legend(reverse=TRUE)) +
+  labs(title = "Amount of households relative to poverty line",
+       x = "Year",
+       y = "Precent of households",
+       fill = "Household income
+relative to poverty income") 
+```
 
 ```{r, echo = FALSE}
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
