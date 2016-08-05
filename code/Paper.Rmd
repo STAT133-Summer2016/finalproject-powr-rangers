@@ -52,10 +52,11 @@ clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
     ggplot(aes(x = year,   
                       y = new_y,   
                       colour = per)) +  
-    geom_line() +
+    geom_line(size = 1) +
     labs(colour = "Household size",
          x = "Year",
          y = "Median burden") +
+    scale_colour_brewer(palette = "Dark2") +
     theme_tufte()
 
 ```
@@ -184,6 +185,7 @@ ggplot(counts, aes(x = year,
        y = "Precent of households",
        fill = "Household income
 relative to poverty income") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 ```
 
@@ -210,9 +212,10 @@ cleanyears %>%
   
 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   labs(title = "Relationship between Household \nIncome and Burden", 
        y = "Household Income ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
 ```
@@ -229,10 +232,11 @@ As pictured in the graph, the relationship between household income and burden i
     paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) +
   labs(title = "Relationship between Household \nIncome and Burden", 
        y = "Household Income ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
 
@@ -257,9 +261,10 @@ cleanyearsmonthly %>%
     paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
   
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
        y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
 
@@ -278,10 +283,11 @@ From this graph, you can take a more indepth look at the relationship between ho
 
  
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
   labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
        y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
 
@@ -304,11 +310,12 @@ clean_sample %>% filter(fmtstructuretype != ".") %>%
       ggplot(aes_string(x = "year",   
                         y = "new_y",   
                         colour = "fmtstructuretype")) +  
-      geom_line() +
+  geom_line(size = 1) + 
   labs(title="Income compared to area's median grouped by house type",
        colour = "Structure Type",
        y="Income percentage of area median income",
        x = "Year") +
+  scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
 
@@ -361,10 +368,13 @@ clean_years %>%
   summarise(new_y = median(aplmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() +
+                  colour = region)) + 
+  geom_line(size = 1) + 
   labs(x = "Year", y = "Median Adjusted Income (per persons)", 
        title = "Median Income Adjusted \nfor the Number of People by Region") + 
-  scale_color_discrete(name = "Region", labels = regionNames) +
+  scale_colour_brewer(palette = "Dark2", 
+                      name = "Region", 
+                      labels = regionNames) +
   theme_tufte()
 
 
@@ -386,10 +396,13 @@ clean_years %>%
   summarise(new_y = median(ablmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() +
+                  colour = region)) + 
+  geom_line(size = 1) +
   labs(x = "Year", y = "Median Adjusted Income (per persons)", 
        title = "Median Income Adjusted \nfor Number of Bedrooms by region") + 
-  scale_color_discrete(name = "Region", labels = regionNames) +
+  scale_colour_brewer(palette = "Dark2",
+                      name = "Region", 
+                      labels = regionNames) +
   theme_tufte()
 
 ```
