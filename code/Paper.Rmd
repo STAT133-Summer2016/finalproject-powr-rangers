@@ -173,7 +173,7 @@ counts <- clean_years %>%
 ggplot(counts, aes(x = year, 
                    y = percent,
                    fill = fmtincrelpovcat)) + 
-  geom_area(alpha = 0.9) +
+  geom_area(alpha = 0.8) +
   # Use a nice colour palette
   scale_fill_brewer(palette = "RdYlGn", 
                     # Reverse the order of legend items to match the
