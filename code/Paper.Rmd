@@ -335,7 +335,10 @@ ggplot(assisted, aes(y = new_y,
        x = "",
        fill="Assistance") + 
   scale_y_continuous(limits=c(0,1)) +
-  scale_fill_manual("Assistance",labels=c("Without Assistance", "With Assistance"), values=c("black", "white")) +
+  scale_fill_brewer("Assistance", 
+                    labels = c("Without Assistance", 
+                               "With Assistance"),
+                    palette = "Set2")  +
   coord_flip() +
   theme_tufte()
 ```
