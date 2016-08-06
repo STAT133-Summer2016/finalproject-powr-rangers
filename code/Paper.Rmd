@@ -213,10 +213,11 @@ cleanyears %>%
 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
+  labs(title = "Figure : Relationship between Household \nIncome and Burden", 
        y = "Household Income ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
+
 
 ```
 
