@@ -123,7 +123,7 @@ usa_map <- map_df %>%
                    fill = zinc2_median, 
                    group = group)) + 
   coord_fixed(1.3) +
-  theme_minimal() +
+  theme_tufte() +
   scale_x_continuous(name = NULL,
                      labels = NULL,
                      breaks = NULL) +
@@ -188,6 +188,12 @@ relative to poverty income") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 ```
+
+This plot shows the amount of households in a given income group in a given year. Each household has been calculated a poverty treshold according to the Census Bureau’s official thresholds, based on family size and number of children. 
+
+As can be seen from the plot, the amount of people in different income groups stayed relatively constant between 1985 and 2007. The majority of people earned over twice the poverty income, while little under a fifth of the population was in poverty. This stable relationship broke noticeably in the financial crisis of 2007 and the following recession, when the amount of people in poverty started a quite steep and steady climb upwards. 
+
+Interestingly, the income brackets of 100%-200% stayed almost exactly the same size as before, while the increase in poverty was in effect solely the result of the dwindling of the highest (over 200% of poverty income) income bracket. A reasonable explanation would be the effect of increasing unemployment, with previously employed well-off people dropping to unemployment and thus small or no income. The reality can be more nuanced, with people dropping to the middle income groups and a simultaneous equally large movement from these brackets to poverty, but the big picture of large impacts in poverty following the financial crisis stays the same.
 
 ```{r, echo = FALSE}
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
