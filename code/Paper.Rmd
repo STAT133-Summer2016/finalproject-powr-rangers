@@ -14,6 +14,7 @@ library(xml2)
 library(rvest)
 library(tidyr)
 library(purrr)
+library(scales)
 library(maps)
 library(ggthemes)
 ```
@@ -194,11 +195,9 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
-
-
 ```{r, echo = FALSE}
 
-cleanyears <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
+cleanyears <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
   select(zinc2, year, region, fmtburden)%>% 
   filter(fmtburden != ".") %>% 
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
@@ -214,7 +213,8 @@ cleanyears %>%
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   labs(title = "Figure : Relationship between Household \nIncome and Burden", 
-       y = "Household Income ($)", x = "Year", color = "Burden") +
+       y = "Household Income", x = "Year", color = "Burden") +
+  scale_y_continuous(labels = unit_format(unit = "K")) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
@@ -248,7 +248,7 @@ From this graph, you can see that the Northeast and West have higher rates of bu
 
 ```{r, echo = FALSE}
 
-cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
+cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
   select(year, zsmhc, region, fmtburden) %>% 
   filter(fmtburden != ".") %>% 
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
@@ -355,8 +355,6 @@ The plot shows how burden changes as a result of assistance based on what percen
 
 
 ```{r, echo = FALSE}
-
-col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
 
 clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
 
