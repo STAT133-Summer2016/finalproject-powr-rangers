@@ -1,0 +1,138 @@
+---
+title: "Exploration process"
+author: "Nikolai Myllymäki"
+date: "7 August 2016"
+output: html_document
+---
+```{r, include=F}
+library(ggplot2)
+library(readr)
+library(stringr)
+library(dplyr)
+
+clean_sample <- read_csv("../clean_data/clean_sample.csv")
+clean_years <- read_csv("../clean_data/clean_years.csv")
+```
+Disclaimer: the plots in this document have been slightly modified to allow compilation with the modern data. Some variable names have been changed and minor settings (e.g. setting na.rm=T) have been modified. Samples of original code can be seen in /originals, but these cannot be directly compiled without modification.
+
+As our dataset was large, with a hundred variables and nearly a million observations, the task of exploring was not trivial. We made a sample of the data to make working with it easier. Early on we decided to use a shiny app for exploration, as this would allow us to quickly change grouping and axis variables to gain insights from the dataset. Before doing the shiny app, we wanted to test the data combining and cleaning code with a simple ggplot:
+
+```{r, echo = F}
+clean_sample %>% 
+  group_by(year) %>% 
+  summarise(burden_year = mean(burden, na.rm = T)) %>% 
+  ggplot(aes(x = year, y = burden_year)) + 
+  geom_line()
+```
+
+Here we saw that using the mean was greatly skewing the results, as "sane" values for burden (housing costs divided by income) are typically between 0 and 1 but people with low income can get absurdly high values for burden as the denominator approaches zero. So we updated the plot to use medians, which are robust to outliers:
+
+```{r , echo = F}
+clean_sample %>% 
+  group_by(year) %>% 
+  # Take the median instead of mean to avoid extreme observations skewing the
+  # result.
+  summarise(burden_year = median(burden, na.rm = T)) %>% 
+  ggplot(aes(x = year, y = burden_year)) + 
+  geom_line()
+
+# The housing price bubble can be seen
+## But we want to analyze the effect of falling incomes as well. To be expanded.
+```
+
+Now we could see that we had at leas the rudiments of data combining and cleaning working, and we could expand on this particular graph to the shiny app. The graph looked rough because of the small sample used, but using the whole dataset smoothed things out:
+
+```{r, echo=F}
+clean_years %>% 
+  group_by(year) %>% 
+  # Take the median instead of mean to avoid extreme observations skewing the
+  # result.
+  summarise(burden_year = median(burden, na.rm = T)) %>% 
+  ggplot(aes(x = year, y = burden_year)) + 
+  geom_line()
+
+# The housing price bubble can be seen
+## But we want to analyze the effect of falling incomes as well. To be expanded.
+```
+
+Next we wanted to include the first version of the shiny app. This was very much a tool, since it still needed manual loading of data and didn't have options for changing the y axis variable. Still, using the app for exploring variables was very beneficial. We found out that many of the grouping variables where numeric where they should have been factors or strings, and updated the data cleaning file accordingly. We also decided on the next production plots on the ideas from the shiny-powered brainstorming session. The first version of the Shiny app can be found in the folder shiny1.
+
+```{r, echo=F}
+clean_sample %>%
+  group_by(year, region) %>%  
+  # Take the median instead of mean to avoid extreme observations skewing the 
+  # result.
+  summarise(new_y = median(aplmed, na.rm = T)) %>%
+  ggplot(aes(x = year,   
+                  y = new_y,   
+                  colour = region)) + geom_line() +
+  labs(x = "year", y = "Median Adjusted Income (per persons)", 
+       title = "APLmed by region")
+```
+
+We added plots and ran into some column type issues that were addressed in the data parsing pipeline. For example in the graph above, region had to be converted from numeric to a factor. Mostly, our experimenting was done on the Shiny app, so there are not too many old graphs to begin with: most ggplot code was developed very much like it is currently on the paper. After doing different versions of time series based on the shiny app, we felt that there are aspects of the data that required different types of plots. We did the map, which was very similar to what can be seen on the paper right now, and a couple of bar charts showing burden with or without assistance.
+
+```{r, echo = F, message=F, error=F, warning=FALSE}
+clean_sample %>% filter(assisted == 0) %>% 
+      # Use NSE
+      group_by_("assisted", "fmtcostmedrelamicat") %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>%  
+      # Use NSE
+      ggplot(aes_string(y = "new_y",   
+                        x = "fmtcostmedrelamicat",
+                        fill = "fmtcostmedrelamicat")) +  
+      geom_bar(stat="identity") + labs(title="Burden based on Median housing cost without assistance",
+       fill = "Cost as Percentage of Area Median Income",
+       y="Burden",
+       x = "") + 
+  scale_y_continuous(limits=c(0,1)) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  coord_flip()
+
+clean_sample %>% filter(assisted == 1) %>% 
+      # Use NSE
+      group_by_("assisted", "fmtcostmedrelamicat") %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>%  
+      # Use NSE
+      ggplot(aes_string(y = "new_y",   
+                        x = "fmtcostmedrelamicat",
+                        fill = "fmtcostmedrelamicat")) +  
+      geom_bar(stat="identity") + labs(title="Burden based on Median housing cost with assistance",
+       fill = "Cost as Percentage of Area Median Income",
+       y="Burden",
+       x = "") + 
+  scale_y_continuous(limits=c(0,1)) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  coord_flip()
+```
+
+We received very good feedback that the colour scheme on the bar charts was a bit jarring, and that readability could be improved with a stacked version of the plot. We changed accordingly.
+
+```{r, echo = F, message=F, error=F, warning=FALSE}
+assisted = clean_sample %>% filter(!is.na(assisted)) %>% 
+      # Use NSE
+      group_by_("assisted", "fmtcostmedrelamicat") %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>% 
+      ungroup %>% 
+      mutate(assisted = as.factor(assisted))
+ggplot(assisted, aes(y = new_y,   
+                  x = fmtcostmedrelamicat,
+                  fill = assisted, group = assisted)) +  
+  geom_bar(
+           stat="identity") + 
+  labs(title="Burden based on Median housing cost with assistance",
+       y="Burden",
+       x = "",
+       fill="Assistance") + 
+  scale_y_continuous(limits=c(0,1)) +
+  scale_fill_manual("Assistance",labels=c("Without Assistance", "With Assistance"), values=c("black", "white")) +
+  coord_flip()
+```
+
+Colours were not rainbows anymore, but we still modified these by trying a bunch of different colour schemes from colorbrewer2.org. We updated the graphs in the paper to the clean tufte theme, which also happens to have the same font as default latex article output. We also updated the shiny app to include more modifiable variables, as can be seen from the final version.
