@@ -32,8 +32,7 @@ Cleaning data
 Initially, the dataset is split into fifteen datasets, one for each odd year between 1985 and 2013. Due to differences in how the survey was conducted over the years, each dataset has varying column names and positions, and, for surveys performed earlier than 2003, missing columns. To standardize the data, we used the format of the more modern datasets, i.e the datasets from 2003 to 2013. Thus, we begin by appending a column onto each dataset to mark which year that data was gathered, remove an extraneous column from the 2009 dataset, and then simply combine the datasets. For the older years, the datasets must again be split into two groups as some columns are named differently and do not fit with our standard. Once we rename the columns, we add the missing columns that dictate the raw, adjusted by growth, and adjusted by people income limits for each household. These income limits specifically determine what the extremely low income bracket is for the area each household is in. For each list of datasets, we reorder the columns to exactly match that of our base, the datasets gathered from 2003 onward. Finally we combine every list of datasets into a single dataset, and then store it in a comma separated file called combined_years. 
 
 
-The "combined_ years" data was read into a dataframe using the "read_ csv" function. Within the read_csv function, the column types were explicitly stated as a string variable (c = character, i = integer, etc.), and the nonsensical integer date (negative numbers) were converted to NAs in the dataset. Then, the combined years dataset was cleaned using the piping methods in dplyr. All the column names were set to lowercase, and all the quotations were removed from character values.
-Then, an additional column “ownrent” was added which labeled levels 1 and 2 to own and rent as factors. Then, the data was written to a clean_years csv file. 
+  The "combined-years" data was read into a dataframe using the read.csv function. Within the read.csv function, the column types were explicitly stated as a string variable (c = character, i = integer, etc.), in order for the data to be wrangled properly. Also, the nonsensical integer date (negative numbers) were converted to NAs in the dataset so that the output data and graphs made stastical sense - negative numbers where the values should be positive skew the dataset. Then, the combined years dataset was cleaned using the piping methods in dplyr. The data was rather messy, with unecessary quotaions around character values and inconsistent letter cases in the column names. This was rectified by setting all the column names to lowercase and removing all the quotations from character values. One the main premises of this paper is comparing the burden of household that are owning and renting. Since there was no explicit labeling of data corresponding to owning and renting households, an  additional column "ownrent" was created which labeled levels 1 and 2 to own and rent as factors. Finally, the data was written to a clean_years csv file. 
 
 
 
@@ -383,9 +382,12 @@ clean_years %>%
 
 ```
 
-This plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). It is clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and West are by far the most productive (by GDP) regions in the United States. 
+This plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). APLmed is the adjusted median household income per person. This was precaculated using Housing and Urban Development (HUD) indexes. For example, a one person household's income is adjusted by a factor of 0.70, two by 0.80, and so on with a four person household beig adjusted by 1.00 (or having no change from the median household income). The reason for no adjustment to a four person househodl income is becasue the median hosuehold size in the United States is about four persons. 
+
+It is clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and West are by far the most productive (by GDP) regions in the United States. 
 
 The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street and Main Street- which refers to the Washington D.C. economy) while the other regions took some time to correct for the downturn in the financial market. 
+
 
 ```{r, echo = F}
 
@@ -401,7 +403,7 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) +
-  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
+  labs(x = "Year", y = "Median Adjusted Income (Per Bedroom)", 
        title = "Median Income Adjusted \nfor Number of Bedrooms by region") + 
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
@@ -410,12 +412,9 @@ clean_years %>%
 
 ```
 
-The trends of the graphs here are similar to the ones in APLmed, however ABLmed signifies the median adjusted income for the number of bedrooms in a household's living quarters. 
+The trends of the graphs here are similar to the ones in APLmed, however ABLmed signifies the median adjusted income for the number of bedrooms in a household's living quarters. ABlmed was calculated using precaculated HUD indexes. Here, zero bedrooms was adjusted by a factor of 0.70, two bedrooms by 0.90, and so on. Three bedroom properties were adjusted by a factor of 1.04, because the median number of bedrooms in a property is roughly three bedrooms
 
-It is interesting to note that the disparity between the incomes increases between the Northeast/Western regions and the Midwest/Southern Regions. This is liekly because those living in the Midwest and South ten dto live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
-
-The lag in the downward trend after 2008 still occurs in the plots.
-
+It is interesting to note that the disparity between the incomes increases between the Northeast and WEstern regions and the Midwest and South. This is liekly because those living in the Midwest and South tend to live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
 
 Conclusion: 
 
