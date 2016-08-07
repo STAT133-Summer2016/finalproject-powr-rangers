@@ -28,7 +28,7 @@ We chose to analyze the data and ultimately view determines whether housing affo
 
 Cleaning data
 
-Cleaning data
+
 Initially, the dataset is split into fifteen datasets, one for each odd year between 1985 and 2013. Due to differences in how the survey was conducted over the years, each dataset has varying column names and positions, and, for surveys performed earlier than 2003, missing columns. To standardize the data, we used the format of the more modern datasets, i.e the datasets from 2003 to 2013. Thus, we begin by appending a column onto each dataset to mark which year that data was gathered, remove an extraneous column from the 2009 dataset, and then simply combine the datasets. For the older years, the datasets must again be split into two groups as some columns are named differently and do not fit with our standard. Once we rename the columns, we add the missing columns that dictate the raw, adjusted by growth, and adjusted by people income limits for each household. These income limits specifically determine what the extremely low income bracket is for the area each household is in. For each list of datasets, we reorder the columns to exactly match that of our base, the datasets gathered from 2003 onward. Finally we combine every list of datasets into a single dataset, and then store it in a comma separated file called combined_years. 
 
 
@@ -408,7 +408,7 @@ clean_years %>%
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
                       labels = regionNames) +
-  theme_tufte()
+                theme_tufte()
 
 ```
 
@@ -418,5 +418,9 @@ It is interesting to note that the disparity between the incomes increases betwe
 
 Conclusion: 
 
-Blah blah blah blah blah
+From the collected, exploratory data, it is seen that the overall conclusion drawn is that housing affordability has decreased over the years. From the data, it is seen that there were many dips and peaks coincidentally near the years of 2007 and forward, which is indicative of the financial housing bubble crisis that occurred in 2007. 
+
+In several of the graphs, the dips occur near 2007, 2008, and we conclude these as being consequences of the crash of 2007. One of the greatest factors is burden, which has increased over the years. If we compare
+
+Because our data only extends towards 2013, we don't have more recent data to make any great assumptions on the future of the housing market. According to an "ARTICLE HERE", the United States housing sector might be headed towards another bubble. 
 
