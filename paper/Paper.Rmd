@@ -14,7 +14,9 @@ library(xml2)
 library(rvest)
 library(tidyr)
 library(purrr)
+library(scales)
 library(maps)
+library(ggthemes)
 ```
 
 Summary/Intro
@@ -51,10 +53,12 @@ clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
     ggplot(aes(x = year,   
                       y = new_y,   
                       colour = per)) +  
-    geom_line() +
+    geom_line(size = 1) +
     labs(colour = "Household size",
          x = "Year",
-         y = "Median burden")
+         y = "Median burden") +
+    scale_colour_brewer(palette = "Dark2") +
+    theme_tufte()
 
 ```
 
@@ -120,7 +124,7 @@ usa_map <- map_df %>%
                    fill = zinc2_median, 
                    group = group)) + 
   coord_fixed(1.3) +
-  theme_minimal() +
+  theme_tufte() +
   scale_x_continuous(name = NULL,
                      labels = NULL,
                      breaks = NULL) +
@@ -128,8 +132,12 @@ usa_map <- map_df %>%
                      labels = NULL,
                      breaks = NULL) +
   labs(fill = "Median income") +
-  scale_fill_gradient2(midpoint = 25000)
-
+  scale_fill_distiller(limits = c(25000, 42000), 
+                                 breaks = sort(unique(map_df$zinc2_median),
+                                               decreasing = T),
+                                 palette = "Greens", 
+                                 direction = 1,
+                                 guide = "legend")
 ```
 
 ```{r, echo=F}
@@ -142,17 +150,60 @@ The household median monthly incomes vary between different census regions from 
 
 While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
+```{r, echo = FALSE}
+counts <- clean_years %>% 
+  # Group and summarise the amount of people in each poverty group each year
+  group_by(fmtincrelpovcat, year) %>%
+  summarise(count = n()) %>%
+  # Clean NAs
+  na.omit() %>%
+  # Group again by year to calculate relative percentages per year
+  group_by(year) %>% 
+  mutate(percent = count / sum(count),  
+         # Clean the labels
+         fmtincrelpovcat = factor(fmtincrelpovcat, 
+                                  levels = c("1 LTE Poverty", 
+                                             "2 100-150% Poverty", 
+                                             "3 150-200% Poverty", 
+                                             "4 200%+ Poverty"),  
+                                  labels = c("Less than poverty income",   
+                                             "100-150% of poverty income",   
+                                             "150-200% of poverty income",    
+                                             "> 200% of poverty income"),
+                                  ordered = T))
+
+ggplot(counts, aes(x = year, 
+                   y = percent,
+                   fill = fmtincrelpovcat)) + 
+  geom_area(alpha = 0.8) +
+  # Use a nice colour palette
+  scale_fill_brewer(palette = "RdYlGn", 
+                    # Reverse the order of legend items to match the
+                    # stacking order
+                    guide = guide_legend(reverse=TRUE)) +
+  labs(title = "Amount of households relative to poverty line",
+       x = "Year",
+       y = "Precent of households",
+       fill = "Household income
+relative to poverty income") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
+```
+
+This plot shows the amount of households in a given income group in a given year. Each household has been calculated a poverty treshold according to the Census Bureau’s official thresholds, based on family size and number of children. 
+
+As can be seen from the plot, the amount of people in different income groups stayed relatively constant between 1985 and 2007. The majority of people earned over twice the poverty income, while little under a fifth of the population was in poverty. This stable relationship broke noticeably in the financial crisis of 2007 and the following recession, when the amount of people in poverty started a quite steep and steady climb upwards. 
+
+Interestingly, the income brackets of 100%-200% stayed almost exactly the same size as before, while the increase in poverty was in effect solely the result of the dwindling of the highest (over 200% of poverty income) income bracket. A reasonable explanation would be the effect of increasing unemployment, with previously employed well-off people dropping to unemployment and thus small or no income. The reality can be more nuanced, with people dropping to the middle income groups and a simultaneous equally large movement from these brackets to poverty, but the big picture of large impacts in poverty following the financial crisis stays the same.
 
 ```{r, echo = FALSE}
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
-
-
 ```{r, echo = FALSE}
 
-cleanyears <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
+cleanyears <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
   select(zinc2, year, region, fmtburden)%>% 
   filter(fmtburden != ".") %>% 
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
@@ -166,9 +217,13 @@ cleanyears %>%
   
 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income ($)", x = "Year", color = "Burden") 
+  geom_line(size = 1) + 
+  labs(title = "Figure : Relationship between Household \nIncome and Burden", 
+       y = "Household Income", x = "Year", color = "Burden") +
+  scale_y_continuous(labels = unit_format(unit = "K")) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
+
 
 ```
 
@@ -184,10 +239,12 @@ As pictured in the graph, the relationship between household income and burden i
     paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) +
   labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income ($)", x = "Year", color = "Burden") 
+       y = "Household Income ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
 
 
 
@@ -197,7 +254,7 @@ From this graph, you can see that the Northeast and West have higher rates of bu
 
 ```{r, echo = FALSE}
 
-cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd") %>% 
+cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
   select(year, zsmhc, region, fmtburden) %>% 
   filter(fmtburden != ".") %>% 
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
@@ -211,9 +268,11 @@ cleanyearsmonthly %>%
     paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
   
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") 
+       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
 
 
 ```
@@ -231,10 +290,12 @@ From this graph, you can take a more indepth look at the relationship between ho
 
  
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line() + 
+  geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
   labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") 
+       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
 
 
 ```
@@ -256,11 +317,13 @@ clean_sample %>% filter(fmtstructuretype != ".") %>%
       ggplot(aes_string(x = "year",   
                         y = "new_y",   
                         colour = "fmtstructuretype")) +  
-      geom_line() +
+  geom_line(size = 1) + 
   labs(title="Income compared to area's median grouped by house type",
        colour = "Structure Type",
        y="Income percentage of area median income",
-       x = "Year")
+       x = "Year") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte()
 
 
 ```
@@ -268,53 +331,36 @@ clean_sample %>% filter(fmtstructuretype != ".") %>%
 This plot charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wage grew, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
 ```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE}
-
-clean_sample %>% filter(assisted == 0) %>% 
+assisted = clean_sample %>% filter(!is.na(assisted)) %>% 
       # Use NSE
       group_by_("assisted", "fmtcostmedrelamicat") %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
       # result.
-      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>%  
-      # Use NSE
-      ggplot(aes_string(y = "new_y",   
-                        x = "fmtcostmedrelamicat",
-                        fill = "fmtcostmedrelamicat")) +  
-      geom_bar(stat="identity") + labs(title="Burden based on Median housing cost without assistance",
-       fill = "Cost as Percentage of Area Median Income",
+      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>% 
+      ungroup %>% 
+      mutate(assisted = as.factor(assisted))
+ggplot(assisted, aes(y = new_y,   
+                  x = fmtcostmedrelamicat,
+                  fill = assisted, group = assisted)) +  
+  geom_bar(
+           stat="identity") + 
+  labs(title="Burden based on Median housing cost with assistance",
        y="Burden",
-       x = "") + 
+       x = "",
+       fill="Assistance") + 
   scale_y_continuous(limits=c(0,1)) +
-  guides(fill = guide_legend(reverse = TRUE)) +
-  coord_flip()
-clean_sample %>% filter(assisted == 1) %>% 
-      # Use NSE
-      group_by_("assisted", "fmtcostmedrelamicat") %>%  
-      # Take the median instead of mean to avoid extreme observations skewing the 
-      # result.
-      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>%  
-      # Use NSE
-      ggplot(aes_string(y = "new_y",   
-                        x = "fmtcostmedrelamicat",
-                        fill = "fmtcostmedrelamicat")) +  
-      geom_bar(stat="identity") + labs(title="Burden based on Median housing cost with assistance",
-       fill = "Cost as Percentage of Area Median Income",
-       y="Burden",
-       x = "") + 
-  scale_y_continuous(limits=c(0,1)) +
-  guides(fill = guide_legend(reverse = TRUE)) +
-  coord_flip()
-
-
+  scale_fill_brewer("Assistance", 
+                    labels = c("Without Assistance", 
+                               "With Assistance"),
+                    palette = "Set2")  +
+  coord_flip() +
+  theme_tufte()
 ```
 
 The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
 
 
-
-
 ```{r, echo = FALSE}
-
-col_types = "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
 
 clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
 
@@ -325,9 +371,14 @@ clean_years %>%
   summarise(new_y = median(aplmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() +
-  labs(x = "year", y = "Median Adjusted Income (per persons)", 
-       title = "APLmed by region")
+                  colour = region)) + 
+  geom_line(size = 1) + 
+  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
+       title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  scale_colour_brewer(palette = "Dark2", 
+                      name = "Region", 
+                      labels = regionNames) +
+  theme_tufte()
 
 
 ```
@@ -348,15 +399,20 @@ clean_years %>%
   summarise(new_y = median(ablmed, na.rm = T)) %>%
   ggplot(aes(x = year,   
                   y = new_y,   
-                  colour = region)) + geom_line() +
-  labs(x = "year", y = "Median Adjusted Income (per persons)", 
-       title = "ABLmed by region")
+                  colour = region)) + 
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
+       title = "Median Income Adjusted \nfor Number of Bedrooms by region") + 
+  scale_colour_brewer(palette = "Dark2",
+                      name = "Region", 
+                      labels = regionNames) +
+  theme_tufte()
 
 ```
 
 The trends of the graphs here are similar to the ones in APLmed, however ABLmed signifies the median adjusted income for the number of bedrooms in a household's living quarters. 
 
-It is interesting to note that the disparity between the incomes increases between the Northeast and WEstern regions and the Midwest and South. This is liekly because those living in the Midwest and South ten dto live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
+It is interesting to note that the disparity between the incomes increases between the Northeast/Western regions and the Midwest/Southern Regions. This is liekly because those living in the Midwest and South ten dto live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calcualtion, the income disparity would be far less if not almost nonexistent. 
 
 The lag in the downward trend after 2008 still occurs in the plots.
 

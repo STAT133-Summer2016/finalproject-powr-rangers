@@ -1,6 +1,6 @@
 library(readr)
 
-clean_sample <- read_csv("../data/clean_sample.csv")
+clean_sample <- read_csv("../clean_data/clean_years.csv")
 
 shinyUI(fluidPage(
 
