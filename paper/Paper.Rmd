@@ -1,6 +1,9 @@
 ---
 title: "Paper TITLE"
-output: pdf_document
+output: 
+  pdf_document: 
+    fig_caption: yes
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}
@@ -38,9 +41,7 @@ Then, an additional column “ownrent” was added which labeled levels 1 and 2 
 
 
 ```{r, echo = F}
-col_types <- "cicciiciiciiidicidicddddddiidddddddddddddddddididididididididididididididicccccccccccccccccccccccccd"
- 
-clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
+clean_years <- read_csv("../clean_data/clean_years.csv")
 
   clean_years %>%
     mutate(per = cut(per, 
@@ -58,6 +59,7 @@ clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
          x = "Year",
          y = "Median burden") +
     scale_colour_brewer(palette = "Dark2") +
+  scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
     theme_tufte()
 
 ```
@@ -106,6 +108,7 @@ regions <- rbind(region_1, region_2, region_3, region_4) %>%
          region = as.character(region))
 
 median_incomes <- clean_years %>%
+  mutate(region = as.character(region)) %>%
   group_by(region) %>%
   summarise(zinc2_median = median(zinc2, na.rm = T))
 
@@ -137,7 +140,8 @@ usa_map <- map_df %>%
                                                decreasing = T),
                                  palette = "Greens", 
                                  direction = 1,
-                                 guide = "legend")
+                                 guide = "legend",
+                        labels=function(x){paste0("$",x %/% 100 / 10, "K")})
 ```
 
 ```{r, echo=F}
@@ -151,7 +155,7 @@ The household median monthly incomes vary between different census regions from 
 While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
 ```{r, echo = FALSE}
-counts <- clean_years %>% 
+clean_years %>% 
   # Group and summarise the amount of people in each poverty group each year
   group_by(fmtincrelpovcat, year) %>%
   summarise(count = n()) %>%
@@ -170,11 +174,10 @@ counts <- clean_years %>%
                                              "100-150% of poverty income",   
                                              "150-200% of poverty income",    
                                              "> 200% of poverty income"),
-                                  ordered = T))
-
-ggplot(counts, aes(x = year, 
-                   y = percent,
-                   fill = fmtincrelpovcat)) + 
+                                  ordered = T)) %>% 
+  ggplot(aes(x = year, 
+             y = percent,
+             fill = fmtincrelpovcat)) + 
   geom_area(alpha = 0.8) +
   # Use a nice colour palette
   scale_fill_brewer(palette = "RdYlGn", 
@@ -183,9 +186,10 @@ ggplot(counts, aes(x = year,
                     guide = guide_legend(reverse=TRUE)) +
   labs(title = "Amount of households relative to poverty line",
        x = "Year",
-       y = "Precent of households",
+       y = "Percent of households",
        fill = "Household income
 relative to poverty income") +
+  scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 ```
@@ -202,25 +206,20 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 ```
 
 ```{r, echo = FALSE}
-
-cleanyears <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
-  select(zinc2, year, region, fmtburden)%>% 
-  filter(fmtburden != ".") %>% 
-  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
-
 ###### Household Income
   ####overall graph
-cleanyears %>%  
-    group_by_("year", "fmtburden") %>%  
+clean_years %>% 
+  select(zinc2, year, region, fmtburden)%>% 
+  filter(fmtburden != ".", fmtburden != "4 No Income") %>% 
+  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>% 
+  group_by_("year", "fmtburden") %>%  
   summarise_(new_y = as.formula(
-    paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
-  
-
+  paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Figure : Relationship between Household \nIncome and Burden", 
+  labs(title = "Relationship between Household \nIncome and Burden", 
        y = "Household Income", x = "Year", color = "Burden") +
-  scale_y_continuous(labels = unit_format(unit = "K")) +
+  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
@@ -229,23 +228,23 @@ cleanyears %>%
 
 As pictured in the graph, the relationship between household income and burden is seen as a positive correlation. From the graph, you can see that higher income household have less burden to deal with, which makes sense because those with more money are able to pay off monthly costs more easily. Those with 50% more burden are near the poverty line. From this graph, you can see a spike in households that have burden. Households with higher incomes started to pay more burdens, which can be attributed to 2007 financial housing market crisis.
 
-```{r, echo = FALSE}
-
-
+```{r, echo = FALSE, fig.cap=" "}
  ### faceted by region 
-  cleanyears %>%  
+clean_years %>%  
+  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>%
+  filter(fmtburden != "4 No Income") %>% 
   group_by_("year","region", "fmtburden") %>%  
   summarise_(new_y = as.formula(
     paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
-
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) +
   labs(title = "Relationship between Household \nIncome and Burden", 
        y = "Household Income ($)", x = "Year", color = "Burden") +
+  scale_y_continuous(limits=c(0,NA),breaks=c(0,25000,50000,75000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
-
+  
 
 
 ```
@@ -254,15 +253,13 @@ From this graph, you can see that the Northeast and West have higher rates of bu
 
 ```{r, echo = FALSE}
 
-cleanyearsmonthly <- read_csv("../data/clean_years.csv", col_types = col_types) %>% 
+cleanyearsmonthly <- clean_years %>% 
   select(year, zsmhc, region, fmtburden) %>% 
   filter(fmtburden != ".") %>% 
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More"))
 
 ####overall graph
-
 cleanyearsmonthly %>%  
-
   group_by_("year", "fmtburden") %>%  
   summarise_(new_y = as.formula(
     paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
@@ -283,12 +280,9 @@ From this graph, you can take a more indepth look at the relationship between ho
 
 ### faceted by region
   cleanyearsmonthly %>%  
-  
   group_by_("year","region", "fmtburden") %>%  
   summarise_(new_y = as.formula(
     paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
-
- 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
@@ -305,9 +299,8 @@ From this graph, you can see that the Northeast and West have higher rates of bu
 
 
 ```{r, fig.width=12, fig.height=6,echo = F, message=F,error=F, warning=FALSE}
-
-clean_sample <- read_csv("../data/clean_years.csv")
-clean_sample %>% filter(fmtstructuretype != ".") %>% 
+clean_years %>% 
+  filter(fmtstructuretype != ".") %>% 
       # Use NSE
       group_by_("year", "fmtstructuretype") %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
@@ -317,7 +310,8 @@ clean_sample %>% filter(fmtstructuretype != ".") %>%
       ggplot(aes_string(x = "year",   
                         y = "new_y",   
                         colour = "fmtstructuretype")) +  
-  geom_line(size = 1) + 
+  geom_line(size = 1) +
+  scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
   labs(title="Income compared to area's median grouped by house type",
        colour = "Structure Type",
        y="Income percentage of area median income",
@@ -331,7 +325,7 @@ clean_sample %>% filter(fmtstructuretype != ".") %>%
 This plot charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wage grew, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
 ```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE}
-assisted = clean_sample %>% filter(!is.na(assisted)) %>% 
+assisted = clean_years %>% filter(!is.na(assisted)) %>% 
       # Use NSE
       group_by_("assisted", "fmtcostmedrelamicat") %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
@@ -348,7 +342,8 @@ ggplot(assisted, aes(y = new_y,
        y="Burden",
        x = "",
        fill="Assistance") + 
-  scale_y_continuous(limits=c(0,1)) +
+  scale_y_continuous(limits=c(0,1), labels=function(x){paste0(x*100, "%")}) +
+  scale_x_discrete(labels = function(x){str_replace_all(x,"^[0-9](.*)","\\1")}) +
   scale_fill_brewer("Assistance", 
                     labels = c("Without Assistance", 
                                "With Assistance"),
@@ -361,20 +356,19 @@ The plot shows how burden changes as a result of assistance based on what percen
 
 
 ```{r, echo = FALSE}
-
-clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
-
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
   # result.
   summarise(new_y = median(aplmed, na.rm = T)) %>%
+  mutate(region=as.character(region)) %>% 
   ggplot(aes(x = year,   
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) + 
   labs(x = "Year", y = "Median Adjusted Income (per persons)", 
        title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
                       labels = regionNames) +
@@ -388,21 +382,19 @@ This plot compares APLmed by year for the four regions in the United States (Nor
 The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street and Main Street- which refers to the Washington D.C. economy) while the other regions took some time to correct for the downturn in the financial market. 
 
 ```{r, echo = F}
-
-
-clean_years <- read_csv("../data/clean_years.csv", col_types = col_types)
-
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
   # result.
   summarise(new_y = median(ablmed, na.rm = T)) %>%
+  mutate(region = as.character(region)) %>% 
   ggplot(aes(x = year,   
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) +
   labs(x = "Year", y = "Median Adjusted Income (per persons)", 
-       title = "Median Income Adjusted \nfor Number of Bedrooms by region") + 
+       title = "Median Income Adjusted \nfor Number of Bedrooms by region") +
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
                       labels = regionNames) +
