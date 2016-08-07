@@ -198,6 +198,7 @@ Interestingly, the income brackets of 100%-200% stayed almost exactly the same s
 ```{r, echo = FALSE}
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
+
 ```
 
 ```{r, echo = FALSE}
