@@ -1,0 +1,5 @@
+This folder contains US housing affordability data from https://www.huduser.gov/portal/datasets/hads/hads.html. The dataset contains a hundred variables and 800 000 observations on housing costs, household incomes and household structures.
+
+The files have been compressed to make it possible to use github for their version control (github has a 100Mb file size limit which is exceeded by our combined dataset). Each compressed package has the dataset year in its name.
+
+Running CleanData.R combines the years to a single file and places this file to ../clean_data. The PDF HADS_documentation has detailed information on all of the variables in the dataset, and should be consulted for further information. 
