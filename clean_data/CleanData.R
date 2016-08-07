@@ -136,9 +136,12 @@ clean_years <- combined_years %>%
 # Free some memory
 remove(combined_years)
 
-# Randomize rows to avoid column type detection problems when reading data
 set.seed(1337)  
+# Make a sample for demonstration purposes
+clean_sample <- sample_n(clean_years, 10000)
+# Randomize rows to avoid column type detection problems when reading data
 clean_years <- sample_n(clean_years, nrow(clean_years))
 
 # Save the results
+write_csv(clean_sample, path = "clean_sample.csv")
 write_csv(clean_years, path = "clean_years.csv")
