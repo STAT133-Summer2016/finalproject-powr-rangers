@@ -40,7 +40,7 @@ Then, an additional column “ownrent” was added which labeled levels 1 and 2 
 
 
 
-```{r, echo = F}
+```{r, echo = F, fig.cap="Median Burden across Years and Household sizes"}
 clean_years <- read_csv("../clean_data/clean_years.csv")
 
   clean_years %>%
@@ -70,7 +70,7 @@ Surprisingly, households of two people have the lowest burdens overall. Our hypo
 
 Another interesting thing is the dramatic increase of burden during the buildup to the financial crisis 2000-2007. The most probable exlanation is the housing market price bubble. Once the crisis hit in 2007, the effect of dropping incomes continued to increase burdens until 2011. Only in 2013 data did the burdens start to fall from the unprecedently high levels.
 
-```{r, include = F}
+```{r, include = F, fig.cap="Median Income across Census Regions"}
 url <- "http://www.mapsofworld.com/usa/usa-maps/united-states-regional-maps.html"
 html <- read_html(url)
 xpath <- '//table[@class="tableizer-table"]'
@@ -154,7 +154,7 @@ The household median monthly incomes vary between different census regions from 
 
 While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap="Amount of households relative to poverty line"}
 clean_years %>% 
   # Group and summarise the amount of people in each poverty group each year
   group_by(fmtincrelpovcat, year) %>%
@@ -184,8 +184,7 @@ clean_years %>%
                     # Reverse the order of legend items to match the
                     # stacking order
                     guide = guide_legend(reverse=TRUE)) +
-  labs(title = "Amount of households relative to poverty line",
-       x = "Year",
+  labs(x = "Year",
        y = "Percent of households",
        fill = "Household income
 relative to poverty income") +
@@ -205,7 +204,7 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden"}
 ###### Household Income
   ####overall graph
 clean_years %>% 
@@ -217,8 +216,7 @@ clean_years %>%
   paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income", x = "Year", color = "Burden") +
+  labs(y = "Household Income", x = "Year", color = "Burden") +
   scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
@@ -228,7 +226,7 @@ clean_years %>%
 
 As pictured in the graph, the relationship between household income and burden is seen as a positive correlation. From the graph, you can see that higher income household have less burden to deal with, which makes sense because those with more money are able to pay off monthly costs more easily. Those with 50% more burden are near the poverty line. From this graph, you can see a spike in households that have burden. Households with higher incomes started to pay more burdens, which can be attributed to 2007 financial housing market crisis.
 
-```{r, echo = FALSE, fig.cap=" "}
+```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden"}
  ### faceted by region 
 clean_years %>%  
   mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>%
@@ -239,8 +237,7 @@ clean_years %>%
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) +
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income ($)", x = "Year", color = "Burden") +
+  labs(y = "Household Income ($)", x = "Year", color = "Burden") +
   scale_y_continuous(limits=c(0,NA),breaks=c(0,25000,50000,75000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
@@ -251,7 +248,7 @@ clean_years %>%
 
 From this graph, you can see that the Northeast and West have higher rates of burden at higher income levels, therefore illustrating how housing affordability in these regions are less than that of the Midwest and South. 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap = "Relationship between Monthly Housing Costs and Burden"}
 
 cleanyearsmonthly <- clean_years %>% 
   select(year, zsmhc, region, fmtburden) %>% 
@@ -266,8 +263,7 @@ cleanyearsmonthly %>%
   
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
@@ -276,7 +272,7 @@ cleanyearsmonthly %>%
 
 From this graph, you can take a more indepth look at the relationship between housing costs and burden. It's interesting to see that all three burden lines are close to one another, which illustrates the principle that those with more money aren't buying more expensive houses. From the previous grpah, we saw that those with higher incomes have less burden, and those with lower incomes have higher burden. Each level of burden has similar housing costs, therefore reinforcing the idea that people are buying similar priced housing among the lower and middle classes. Again, a spike around 2010 is prevalent, which can be caused by the 2007 housing crisis. 
 
-```{r, echo= FALSE}
+```{r, echo= FALSE, fig.cap="Relationship between Monthly Housing Costs and Burden"}
 
 ### faceted by region
   cleanyearsmonthly %>%  
@@ -286,8 +282,7 @@ From this graph, you can take a more indepth look at the relationship between ho
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
-  labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte()
 
@@ -298,7 +293,7 @@ From this graph, you can take a more indepth look at the relationship between ho
 From this graph, you can see that the Northeast and West have higher rates of burden at higher income levels, therefore illustrating how housing affordability in these regions are less than that of the Midwest and South. 
 
 
-```{r, fig.width=12, fig.height=6,echo = F, message=F,error=F, warning=FALSE}
+```{r, fig.width=12, fig.height=6,echo = F, message=F,error=F, warning=FALSE, fig.cap = "Income compared to area's median grouped by house type"}
 clean_years %>% 
   filter(fmtstructuretype != ".") %>% 
       # Use NSE
@@ -312,8 +307,7 @@ clean_years %>%
                         colour = "fmtstructuretype")) +  
   geom_line(size = 1) +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
-  labs(title="Income compared to area's median grouped by house type",
-       colour = "Structure Type",
+  labs(colour = "Structure Type",
        y="Income percentage of area median income",
        x = "Year") +
   scale_colour_brewer(palette = "Dark2") +
@@ -324,7 +318,7 @@ clean_years %>%
 
 This plot charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wage grew, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
-```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE}
+```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE, fig.cap="Burden based on Median housing cost with assistance"}
 assisted = clean_years %>% filter(!is.na(assisted)) %>% 
       # Use NSE
       group_by_("assisted", "fmtcostmedrelamicat") %>%  
@@ -338,8 +332,7 @@ ggplot(assisted, aes(y = new_y,
                   fill = assisted, group = assisted)) +  
   geom_bar(
            stat="identity") + 
-  labs(title="Burden based on Median housing cost with assistance",
-       y="Burden",
+  labs(y="Burden",
        x = "",
        fill="Assistance") + 
   scale_y_continuous(limits=c(0,1), labels=function(x){paste0(x*100, "%")}) +
@@ -355,7 +348,7 @@ ggplot(assisted, aes(y = new_y,
 The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region"}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -366,8 +359,7 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) + 
-  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
-       title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  labs(x = "Year", y = "Median Adjusted Income (per persons)") + 
   scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
@@ -381,7 +373,7 @@ This plot compares APLmed by year for the four regions in the United States (Nor
 
 The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street and Main Street- which refers to the Washington D.C. economy) while the other regions took some time to correct for the downturn in the financial market. 
 
-```{r, echo = F}
+```{r, echo = F, fig.cap="Median Income Adjusted for Number of Bedrooms by region"}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -392,8 +384,7 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) +
-  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
-       title = "Median Income Adjusted \nfor Number of Bedrooms by region") +
+  labs(x = "Year", y = "Median Adjusted Income (per persons)") +
   scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
