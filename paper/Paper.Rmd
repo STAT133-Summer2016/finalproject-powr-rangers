@@ -343,7 +343,7 @@ ggplot(assisted, aes(y = new_y,
        x = "",
        fill="Assistance") + 
   scale_y_continuous(limits=c(0,1), labels=function(x){paste0(x*100, "%")}) +
-  scale_x_discrete(labels = function(x){str_replace_all(x,"^[0-9](.*)","\\1")}) +
+  scale_x_discrete(labels = function(x){str_replace_all(str_replace_all(x, "^[0-9] (.*)","\\1"), "LTE (.*)","<= \\1")}) +
   scale_fill_brewer("Assistance", 
                     labels = c("Without Assistance", 
                                "With Assistance"),
