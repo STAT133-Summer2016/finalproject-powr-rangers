@@ -62,8 +62,22 @@
     <h2>Cleaning the Data</h2>
   </hgroup>
   <article data-timings="">
-    <ul>
-<li></li>
+    <p>Combined Years:</p>
+
+<ul>
+<li>Dataset is split into fifteen datasets, one for each odd year between 1985 and 2013</li>
+<li>To standardize the data used data from 2003 - 2013</li>
+<li>Reorder the columns to exactly match that of our base (2003 onward)</li>
+<li>Combine every list of datasets into single dataset</li>
+</ul>
+
+<p>Clean Data:</p>
+
+<ul>
+<li>Initally removed NAs, expressed column in read_csv</li>
+<li>Set column names to lowercase, removed quotations</li>
+<li>Created column for owning and renting data (1= own, 2= rent)</li>
+<li>Write to csv (same for combined years)</li>
 </ul>
 
   </article>
@@ -72,12 +86,10 @@
 
 <slide class="" id="slide-3" style="background:;">
   <hgroup>
-    <h2>Variables</h2>
+    <h2>Variables According to the HUD Document Data Set</h2>
   </hgroup>
   <article data-timings="">
-    <p>Variables According to the HUD Document Data Set</p>
-
-<table><thead>
+    <table><thead>
 <tr>
 <th>Variables</th>
 <th>Meanings</th>
@@ -146,25 +158,7 @@
     <h2>Household Income and Burden</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">clean_years %&gt;% 
-  select(zinc2, year, region, fmtburden)%&gt;% 
-  filter(fmtburden != &quot;.&quot;, fmtburden != &quot;4 No Income&quot;) %&gt;% 
-  mutate(fmtburden = str_replace(fmtburden, &quot;Greater than 50%&quot;, &quot;50% or More&quot;)) %&gt;% 
-  group_by_(&quot;year&quot;, &quot;fmtburden&quot;) %&gt;%  
-  summarise_(new_y = as.formula(
-  paste0(&quot;~ median(&quot;,&quot;zinc2&quot;, &quot;,na.rm=T)&quot;))) %&gt;% 
-
-
-  ggplot(aes_string(x = &quot;year&quot;, y = &quot;new_y&quot;, color = &quot;fmtburden&quot;)) + 
-  geom_line(size = 1) + 
-  labs(title = &quot;Relationship between Household \nIncome and Burden&quot;, 
-       y = &quot;Household Income&quot;, x = &quot;Year&quot;, color = &quot;Burden&quot;) +
-  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, &quot;K&quot;)}) +
-  scale_colour_brewer(palette = &quot;Dark2&quot;) +
-  theme_tufte()
-</code></pre>
-
-<p><img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"></p>
+    <p><img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -186,20 +180,7 @@
     <h2>Regional Monthly Housing Costs and Burden</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">  cleanyearsmonthly %&gt;%  
-  group_by_(&quot;year&quot;,&quot;region&quot;, &quot;fmtburden&quot;) %&gt;%  
-  summarise_(new_y = as.formula(
-    paste0(&quot;~ median(&quot;,&quot;zsmhc&quot;, &quot;,na.rm=T)&quot;))) %&gt;% 
-  ggplot(aes_string(x = &quot;year&quot;, y = &quot;new_y&quot;, color = &quot;fmtburden&quot;)) + 
-  geom_line(size = 1) + 
-  facet_wrap(~region, labeller = as_labeller(regionNames)) + 
-  labs(title = &quot;Relationship between Monthly \nHousing Costs and Burden&quot;, 
-       y = &quot;Monthly Housing Costs ($)&quot;, x = &quot;Year&quot;, color = &quot;Burden&quot;) +
-  scale_colour_brewer(palette = &quot;Dark2&quot;) +
-  theme_tufte()
-</code></pre>
-
-<p><img src="figure/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"></p>
+    <p><img src="figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -240,7 +221,7 @@
 
 <slide class="" id="slide-10" style="background:;">
   <hgroup>
-    <h2>MORE GRAPHS</h2>
+    <h2>Income Compared to Area&#39;s Median by House TypeS</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="figure/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
@@ -251,24 +232,75 @@
 
 <slide class="" id="slide-11" style="background:;">
   <hgroup>
-    <h2>Concluding Thoughts</h2>
+    <h2>Burden Based on Median Housing Cost with Assistance</h2>
   </hgroup>
   <article data-timings="">
-    <ul>
-<li><p>Housing Affordability Has Decreased</p></li>
-<li><p>The 2007 Housing Bubble Crisis </p></li>
-<li><p>Different Housing Regions Affected Differently </p>
-
-<ul>
-<li>Western and Northeast Regions Vs. South and Midwest</li>
-</ul></li>
-</ul>
+    <p><img src="figure/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>MORE GRAPHS</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="figure/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Adjusted income per persons</li>
+<li>Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)</li>
+<li>Spike around 2010 associated with financial crisis</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Median Income Adjusted for Number of Bedrooms By Region</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="figure/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" /></p>
+
+<p>Adjusted income per bedroom</p>
+
+<p>Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)</p>
+
+<p>More discrepancy in burden levels between the Midwest/South and Northeast/West </p>
+
+<ul>
+<li>Larger homes in the Midwest/South</li>
+</ul>
+
+<p>Purhasing parity shoudl be higher in midwest/south, not expressed in data</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Concluding Thoughts</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Housing Affordability Has Decreased</p>
+
+<p>The 2007 Housing Bubble Crisis and it&#39;s Consequences</p>
+
+<p>Census Regions Differences </p>
+
+<ul>
+<li>Western and Northeast Regions Vs. South and Midwest</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Future Questions</h2>
   </hgroup>
@@ -283,7 +315,7 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Ask Us Anything</h2>
   </hgroup>
@@ -293,7 +325,7 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   <article data-timings="">
     
   </article>
@@ -318,7 +350,7 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Variables'>
+        data-slide=3 title='Variables According to the HUD Document Data Set'>
          3
       </a>
     </li>
@@ -360,32 +392,50 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='MORE GRAPHS'>
+        data-slide=10 title='Income Compared to Area&#39;s Median by House TypeS'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Concluding Thoughts'>
+        data-slide=11 title='Burden Based on Median Housing Cost with Assistance'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Future Questions'>
+        data-slide=12 title='MORE GRAPHS'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Ask Us Anything'>
+        data-slide=13 title='Median Income Adjusted for Number of Bedrooms By Region'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='NA'>
+        data-slide=14 title='Concluding Thoughts'>
          14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Future Questions'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Ask Us Anything'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='NA'>
+         17
       </a>
     </li>
   </ul>

@@ -50,19 +50,25 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ## Cleaning the Data
 
+Combined Years:
 
-* 
+- Dataset is split into fifteen datasets, one for each odd year between 1985 and 2013
+- To standardize the data used data from 2003 - 2013
+- Reorder the columns to exactly match that of our base (2003 onward)
+- Combine every list of datasets into single dataset
 
+Clean Data:
 
-
+- Initally removed NAs, expressed column in read_csv
+- Set column names to lowercase, removed quotations
+- Created column for owning and renting data (1= own, 2= rent)
+- Write to csv (same for combined years)
 
 ---
 
 
 
-## Variables 
-
-Variables According to the HUD Document Data Set
+## Variables According to the HUD Document Data Set 
 
 Variables  | Meanings
 ---------- | --------
@@ -84,12 +90,14 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ## Household Income and Burden
 
-```{r}
+```{r, echo = F, fig.align = 'center', fig.width = 12, message = F}
 
 clean_years %>% 
   select(zinc2, year, region, fmtburden)%>% 
   filter(fmtburden != ".", fmtburden != "4 No Income") %>% 
-  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>% 
+  mutate(fmtburden = str_replace(fmtburden, 
+                                 "Greater than 50%", 
+                                 "50% or More")) %>% 
   group_by_("year", "fmtburden") %>%  
   summarise_(new_y = as.formula(
   paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
@@ -99,9 +107,11 @@ clean_years %>%
   geom_line(size = 1) + 
   labs(title = "Relationship between Household \nIncome and Burden", 
        y = "Household Income", x = "Year", color = "Burden") +
-  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
+  scale_y_continuous(limits=c(0,NA),
+                     breaks=c(0,20000,40000,60000),
+                     labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_tufte(base_size = 20)
 
 ```
 
@@ -138,7 +148,7 @@ cleanyearsmonthly %>%
 
 ## Regional Monthly Housing Costs and Burden
 
-```{r}
+```{r, echo = F, fig.align = 'center', fig.width = 12, message = F }
 
   cleanyearsmonthly %>%  
   group_by_("year","region", "fmtburden") %>%  
@@ -150,7 +160,7 @@ cleanyearsmonthly %>%
   labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
        y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_tufte(base_size = 20)
 
 
 ```
@@ -218,7 +228,7 @@ map_df %>%
                    fill = zinc2_median, 
                    group = group)) + 
   coord_fixed(1.3) +
-  theme_tufte() +
+  theme_tufte(base_size = 20) +
   scale_x_continuous(name = NULL,
                      labels = NULL,
                      breaks = NULL) +
@@ -261,7 +271,7 @@ map_df %>%
          title = "Relationship between Burden and Household Size") +
     scale_colour_brewer(palette = "Dark2") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
-    theme_tufte()
+    theme_tufte(base_size = 20)
 
 ```
 
@@ -306,52 +316,147 @@ clean_years %>%
        fill = "Household Income \nRelative to Poverty Income") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_tufte(base_size = 20)
 ```
 
 
 ---
 
+
+## Income Compared to Area's Median by House TypeS
+
+```{r, echo = F, fig.align = 'center', fig.width = 12, message =F}
+
+clean_years %>% filter(fmtstructuretype != ".") %>% 
+      # Use NSE
+      group_by_("year", "fmtstructuretype") %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(","increlamipct", ",na.rm=T)"))) %>%  
+      # Use NSE
+      ggplot(aes_string(x = "year",   
+                        y = "new_y",   
+                        colour = "fmtstructuretype")) +  
+  geom_line(size = 1) + 
+  labs(colour = "Structure Type",
+       y="Income percentage of area median income",
+       x = "Year") +
+  scale_colour_brewer(palette = "Dark2") +
+  theme_tufte(base_size = 20)
+
+```
+
+
+---
+
+## Burden Based on Median Housing Cost with Assistance
+
+```{r, echo = F, fig.align = 'center', fig.width = 12, message= F, warning=F}
+
+assisted = clean_years %>% filter(!is.na(assisted)) %>% 
+      # Use NSE
+      group_by_("assisted", "fmtcostmedrelamicat") %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>% 
+      ungroup %>% 
+      mutate(assisted = as.factor(assisted))
+ggplot(assisted, aes(y = new_y,   
+                  x = fmtcostmedrelamicat,
+                  fill = assisted, group = assisted)) +  
+  geom_bar(
+           stat="identity") + 
+  labs(y="Burden",
+       x = "",
+       fill="Assistance") + 
+  scale_y_continuous(limits=c(0,1)) +
+  scale_fill_brewer("Assistance", 
+                    labels = c("Without Assistance", 
+                               "With Assistance"),
+                    palette = "Set2")  +
+  coord_flip() +
+  theme_tufte(base_size = 20)
+
+```
+
+
+---
 
 ## MORE GRAPHS
 
-```{r, echo = F, fig.align = 'center', fig.width = 12}
+```{r, echo = F, fig.align = 'center', fig.width = 12, message= F}
 
-
-clean_years %>% 
-  select(zinc2, year, region, fmtburden)%>% 
-  filter(fmtburden != ".", fmtburden != "4 No Income") %>% 
-  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>% 
-  group_by_("year", "fmtburden") %>%  
-  summarise_(new_y = as.formula(
-  paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
-  
-  
-  ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
+clean_years %>%
+  mutate(region = as.character(region)) %>% 
+  group_by(year, region) %>%  
+  # Take the median instead of mean to avoid extreme observations skewing the 
+  # result.
+  summarise(new_y = median(aplmed, na.rm = T)) %>%
+  ggplot(aes(x = year,   
+                  y = new_y,   
+                  colour = region)) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income", x = "Year", color = "Burden") +
-  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
-
-
+  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
+       title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  scale_colour_brewer(palette = "Dark2", 
+                      name = "Region", 
+                      labels = regionNames) +
+  theme_tufte(base_size = 20)
 ```
+
+- Adjusted income per persons
+- Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)
+- Spike around 2010 associated with financial crisis
 
 
 ---
 
 
+## Median Income Adjusted for Number of Bedrooms By Region
+
+
+```{r, echo = F, fig.align = 'center', fig.width = 12, message = F}
+
+
+clean_years %>%
+  mutate(region = as.character(region)) %>% 
+  group_by(year, region) %>%  
+  # Take the median instead of mean to avoid extreme observations skewing the 
+  # result.
+  summarise(new_y = median(ablmed, na.rm = T)) %>%
+  ggplot(aes(x = year,   
+                  y = new_y,   
+                  colour = region)) + 
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Median Adjusted Income (Per Bedroom)") + 
+  scale_colour_brewer(palette = "Dark2",
+                      name = "Region", 
+                      labels = regionNames) +
+  theme_tufte(base_size = 20)
+
+```
+
+Adjusted income per bedroom
+
+Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+
+More discrepancy in burden levels between the Midwest/South and Northeast/West 
+  
+  - Larger homes in the Midwest/South
+
+Purhasing parity shoudl be higher in midwest/south, not expressed in data
+
+---
 
 ## Concluding Thoughts
 
-* Housing Affordability Has Decreased
+Housing Affordability Has Decreased
 
-* The 2007 Housing Bubble Crisis 
+The 2007 Housing Bubble Crisis and it's Consequences
 
-* Different Housing Regions Affected Differently 
+Census Regions Differences 
   
-  * Western and Northeast Regions Vs. South and Midwest
+  - Western and Northeast Regions Vs. South and Midwest
 
 ---
 

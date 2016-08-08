@@ -31,19 +31,25 @@ knit        : slidify::knit2slides
 
 ## Cleaning the Data
 
+Combined Years:
 
-* 
+- Dataset is split into fifteen datasets, one for each odd year between 1985 and 2013
+- To standardize the data used data from 2003 - 2013
+- Reorder the columns to exactly match that of our base (2003 onward)
+- Combine every list of datasets into single dataset
 
+Clean Data:
 
-
+- Initally removed NAs, expressed column in read_csv
+- Set column names to lowercase, removed quotations
+- Created column for owning and renting data (1= own, 2= rent)
+- Write to csv (same for combined years)
 
 ---
 
 
 
-## Variables 
-
-Variables According to the HUD Document Data Set
+## Variables According to the HUD Document Data Set 
 
 Variables  | Meanings
 ---------- | --------
@@ -65,27 +71,7 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ## Household Income and Burden
 
-
-```r
-clean_years %>% 
-  select(zinc2, year, region, fmtburden)%>% 
-  filter(fmtburden != ".", fmtburden != "4 No Income") %>% 
-  mutate(fmtburden = str_replace(fmtburden, "Greater than 50%", "50% or More")) %>% 
-  group_by_("year", "fmtburden") %>%  
-  summarise_(new_y = as.formula(
-  paste0("~ median(","zinc2", ",na.rm=T)"))) %>% 
-  
-  
-  ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line(size = 1) + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income", x = "Year", color = "Burden") +
-  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
-  scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+<img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
 ---
 
@@ -98,22 +84,7 @@ clean_years %>%
 
 ## Regional Monthly Housing Costs and Burden
 
-
-```r
-  cleanyearsmonthly %>%  
-  group_by_("year","region", "fmtburden") %>%  
-  summarise_(new_y = as.formula(
-    paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
-  ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
-  geom_line(size = 1) + 
-  facet_wrap(~region, labeller = as_labeller(regionNames)) + 
-  labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
-  scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
-```
-
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+<img src="figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
 
 ---
 
@@ -139,24 +110,58 @@ clean_years %>%
 ---
 
 
-## MORE GRAPHS
+## Income Compared to Area's Median by House TypeS
 
 <img src="figure/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
 
 
 ---
 
+## Burden Based on Median Housing Cost with Assistance
 
+<img src="figure/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
+
+
+---
+
+## MORE GRAPHS
+
+<img src="figure/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
+
+- Adjusted income per persons
+- Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)
+- Spike around 2010 associated with financial crisis
+
+
+---
+
+
+## Median Income Adjusted for Number of Bedrooms By Region
+
+
+<img src="figure/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+
+Adjusted income per bedroom
+
+Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+
+More discrepancy in burden levels between the Midwest/South and Northeast/West 
+  
+  - Larger homes in the Midwest/South
+
+Purhasing parity shoudl be higher in midwest/south, not expressed in data
+
+---
 
 ## Concluding Thoughts
 
-* Housing Affordability Has Decreased
+Housing Affordability Has Decreased
 
-* The 2007 Housing Bubble Crisis 
+The 2007 Housing Bubble Crisis and it's Consequences
 
-* Different Housing Regions Affected Differently 
+Census Regions Differences 
   
-  * Western and Northeast Regions Vs. South and Midwest
+  - Western and Northeast Regions Vs. South and Midwest
 
 ---
 
