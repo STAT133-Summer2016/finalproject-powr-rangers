@@ -105,8 +105,7 @@ clean_years %>%
   
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Household \nIncome and Burden", 
-       y = "Household Income", x = "Year", color = "Burden") +
+  labs(y = "Household Income", x = "Year", color = "Burden") +
   scale_y_continuous(limits=c(0,NA),
                      breaks=c(0,20000,40000,60000),
                      labels=function(x){paste0(x/1000, "K")}) +
@@ -135,14 +134,16 @@ cleanyearsmonthly %>%
   
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
-  labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte(base_size = 20)
 
 
 
 ```
+
+
+- People using savings, not paying for costs, paying with their trust funds
 
 ---
 
@@ -157,13 +158,14 @@ cleanyearsmonthly %>%
   ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
   geom_line(size = 1) + 
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
-  labs(title = "Relationship between Monthly \nHousing Costs and Burden", 
-       y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
+  labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
   theme_tufte(base_size = 20)
 
 
 ```
+
+- The Northeast was impacted first, and then the other regions lagged by two years 
 
 ---
 
@@ -265,8 +267,7 @@ us_map %>%
     geom_line(size = 1) +
     labs(colour = "Household Size",
          x = "Year",
-         y = "Median Burden",
-         title = "Relationship between Burden and Household Size") +
+         y = "Median Burden") +
     scale_colour_brewer(palette = "Dark2") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
     theme_tufte(base_size = 20)
@@ -276,7 +277,7 @@ us_map %>%
 
 ---
 
-## Households and Poverty 
+## Households Relative to the Poverty Line 
 
 ```{r, echo = F, fig.align = 'center', fig.width = 12}
 clean_years %>% 
@@ -308,8 +309,7 @@ clean_years %>%
                     # Reverse the order of legend items to match the
                     # stacking order
                     guide = guide_legend(reverse=TRUE)) +
-  labs(title = "Number of Households Relative to the Poverty Line",
-       x = "Year",
+  labs(x = "Year",
        y = "Percent of Households",
        fill = "Household Income \nRelative to Poverty Income") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
@@ -371,7 +371,7 @@ ggplot(assisted, aes(y = new_y,
   scale_fill_brewer("Assistance", 
                     labels = c("Without Assistance", 
                                "With Assistance"),
-                    palette = "Set2")  +
+                    palette = "Set2") +
   coord_flip() +
   theme_tufte(base_size = 20)
 
@@ -380,7 +380,7 @@ ggplot(assisted, aes(y = new_y,
 
 ---
 
-## MORE GRAPHS
+## "Median Income Adjusted for the Number of People by Region
 
 ```{r, echo = F, fig.align = 'center', fig.width = 12, message= F}
 
@@ -394,27 +394,30 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) + 
-  labs(x = "Year", y = "Median Adjusted Income (per persons)", 
-       title = "Median Income Adjusted \nfor the Number of People by Region") + 
+  labs(x = "Year", y = "Median Adjusted Income (per persons)") + 
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
                       labels = regionNames) +
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K")}) +
   theme_tufte(base_size = 20)
 ```
 
 - Adjusted income per persons
+
 - Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)
+
 - Spike around 2010 associated with financial crisis
 
 
 ---
 
+--- &twocol
 
 ## Median Income Adjusted for Number of Bedrooms By Region
 
+*** =left
 
-```{r, echo = F, fig.align = 'center', fig.width = 12, message = F}
-
+```{r, echo = F, message = F}
 
 clean_years %>%
   mutate(region = as.character(region)) %>% 
@@ -427,6 +430,7 @@ clean_years %>%
                   colour = region)) + 
   geom_line(size = 1) +
   labs(x = "Year", y = "Median Adjusted Income (Per Bedroom)") + 
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
                       labels = regionNames) +
@@ -434,15 +438,19 @@ clean_years %>%
 
 ```
 
-Adjusted income per bedroom
 
-Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+*** =right
 
-More discrepancy in burden levels between the Midwest/South and Northeast/West 
+
+- Adjusted income per bedroom
+
+- Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+
+- More discrepancy in burden levels between the Midwest/South and Northeast/West 
   
   - Larger homes in the Midwest/South
 
-Purhasing parity shoudl be higher in midwest/south, not expressed in data
+- Purhasing parity should be higher in midwest/south (not expressed in data)
 
 ---
 

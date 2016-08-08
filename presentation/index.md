@@ -80,11 +80,16 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 <img src="figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
 
+
+- People using savings, not paying for costs, paying with their trust funds
+
 ---
 
 ## Regional Monthly Housing Costs and Burden
 
 <img src="figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
+
+- The Northeast was impacted first, and then the other regions lagged by two years 
 
 ---
 
@@ -102,7 +107,7 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ---
 
-## Households and Poverty 
+## Households Relative to the Poverty Line 
 
 <img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
@@ -124,32 +129,40 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ---
 
-## MORE GRAPHS
+## "Median Income Adjusted for the Number of People by Region
 
 <img src="figure/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 - Adjusted income per persons
+
 - Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)
+
 - Spike around 2010 associated with financial crisis
 
 
 ---
 
+--- &twocol
 
 ## Median Income Adjusted for Number of Bedrooms By Region
 
+*** =left
 
-<img src="figure/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
 
-Adjusted income per bedroom
 
-Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+*** =right
 
-More discrepancy in burden levels between the Midwest/South and Northeast/West 
+
+- Adjusted income per bedroom
+
+- Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
+
+- More discrepancy in burden levels between the Midwest/South and Northeast/West 
   
   - Larger homes in the Midwest/South
 
-Purhasing parity shoudl be higher in midwest/south, not expressed in data
+- Purhasing parity shoudl be higher in midwest/south, not expressed in data
 
 ---
 
