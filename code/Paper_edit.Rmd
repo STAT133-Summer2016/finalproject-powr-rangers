@@ -1,5 +1,5 @@
 ---
-title: "Exploring Housing Affordiability in America"
+title: "Exploring United States Housing Affordability"
 output: pdf_document
 ---
 
