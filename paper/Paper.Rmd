@@ -348,7 +348,7 @@ ggplot(assisted, aes(y = new_y,
 The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
 
 
-```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region"}
+```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=5, fig.height=5}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -366,6 +366,22 @@ clean_years %>%
                       labels = regionNames) +
   theme_minimal(base_family = "serif")
 
+clean_years %>%
+  group_by(year, region) %>%  
+  # Take the median instead of mean to avoid extreme observations skewing the 
+  # result.
+  summarise(new_y = median(ablmed, na.rm = T)) %>%
+  mutate(region = as.character(region)) %>% 
+  ggplot(aes(x = year,   
+                  y = new_y,   
+                  colour = region)) + 
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Median Adjusted Income (per persons)") +
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
+  scale_colour_brewer(palette = "Dark2",
+                      name = "Region", 
+                      labels = regionNames) +
+  theme_minimal(base_family = "serif")
 
 ```
 
