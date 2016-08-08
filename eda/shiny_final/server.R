@@ -3,7 +3,7 @@ library(dplyr)
 library(readr)
 library(stringr)
  
-clean_sample <- read_csv("../clean_data/clean_years.csv")
+clean_sample <- read_csv("../../clean_data/clean_years.csv")
 
 shinyServer(function(input, output) {
  
