@@ -198,20 +198,19 @@ regions <- rbind(region_1, region_2, region_3, region_4) %>%
          region = as.character(region))
 
 median_incomes <- clean_years %>%
-  ##filter(year == 2013) %>%
+  filter(year == 2013) %>%
   mutate(region = as.character(region)) %>%
   group_by(region) %>%
   summarise(zinc2_median = median(zinc2, na.rm = T))
 
-map_df <- map_data("state") %>%
+us_map <- map_data("state") %>%
   mutate(region = str_to_title(region)) %>%
   rename(state = region)  %>%
   # Join with census region information
   left_join(regions) %>%
   left_join(median_incomes)
   
-
-map_df %>% 
+us_map %>% 
   ggplot() +  
   geom_polygon(aes(x=long, 
                    y = lat, 
@@ -226,14 +225,13 @@ map_df %>%
                      labels = NULL,
                      breaks = NULL) +
   labs(fill = "Median income") +
-  scale_fill_distiller(limits = c(25000, 42000), 
-                                 breaks = sort(unique(map_df$zinc2_median),
+  scale_fill_distiller(limits = c(35000, 54000), 
+                                 breaks = sort(unique(us_map$zinc2_median),
                                                decreasing = T),
                                  palette = "Greens", 
                                  direction = 1,
                                  guide = "legend",
                         labels=function(x){paste0("$",x %/% 100 / 10, "K")})
-
 ```
 
 --- 
