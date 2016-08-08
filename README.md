@@ -16,14 +16,14 @@ The repository contains four folders: raw_data, clean_data, paper and eda.
 To produce the final paper, one has to run _CleanData.R_ from the **clean_data** directory to obtain the combined dataset. This is because of file size limitations on github. Once the code is cleaned, the paper can be reproduced by opening RStudio and knitting _paper.Rmd_.
 
 ## Packages used
-readr
-dplyr
-stringr
-ggplot2
-xml2
-rvest
-tidyr
-purrr
-scales
-maps
-ggthemes
+    * readr
+    * dplyr
+    * stringr
+    * ggplot2
+    * xml2
+    * rvest
+    * tidyr
+    * purrr
+    * scales
+    * maps
+    * ggthemes
