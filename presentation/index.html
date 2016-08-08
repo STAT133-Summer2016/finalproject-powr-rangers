@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Housing Affordability Over the Years</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Housing Affordability Over the Years">
+  <meta name="author" content="Nikolai, William, Sri, Lamb">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Housing Affordability Over the Years</h1>
+    <h2>An Exploration into America's Housing Sector</h2>
+    <p>Nikolai, William, Sri, Lamb<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <pre><code>## Error: &#39;../mydeck/clean_years.csv&#39; does not exist in current working directory (&#39;/Users/Lamb/Documents/GitHub/finalproject-powr-rangers/presentation&#39;).
+</code></pre>
+
+<h2>Introduction: Motivation and Dataset</h2>
+
+<ul>
+<li><p>Our data extends from </p></li>
+<li><p>William&#39;s cleaning</p></li>
+<li><p>Sri&#39;s cleaning</p></li>
+<li><p>Plots</p></li>
+<li><p>Conclusion stuff</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Cleaning the Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Variables</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Variables According to the HUD Document Data Set</p>
+
+<table><thead>
+<tr>
+<th>Variables</th>
+<th>Meanings</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Burden</td>
+<td>Household’s monthly housing cost divided by its monthly income</td>
+</tr>
+<tr>
+<td>Per</td>
+<td>Household Size</td>
+</tr>
+<tr>
+<td>ABLMED</td>
+<td>Median Income Adjusted for # of Bedrooms</td>
+</tr>
+<tr>
+<td>APLMED</td>
+<td>Median Income Adjusted for # of Persons</td>
+</tr>
+<tr>
+<td>ZSMHC</td>
+<td>Monthly housing costs</td>
+</tr>
+<tr>
+<td>ZINC2</td>
+<td>Household Income</td>
+</tr>
+<tr>
+<td>Assisted</td>
+<td>Asssisted Housing</td>
+</tr>
+<tr>
+<td>Year</td>
+<td>The Year of the Data</td>
+</tr>
+<tr>
+<td>Region</td>
+<td>Census Region</td>
+</tr>
+<tr>
+<td>fmtincrelpovcat</td>
+<td>HH Income Relative to Poverty Income</td>
+</tr>
+<tr>
+<td>fmtstructuretype</td>
+<td>Structure Type</td>
+</tr>
+<tr>
+<td>increlamipct</td>
+<td>HH Income relative to AMI (Percent)</td>
+</tr>
+<tr>
+<td>fmtcostmedrelamicat</td>
+<td>CostMed Relative to Median Income</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Household Income and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">clean_years %&gt;% 
+  select(zinc2, year, region, fmtburden)%&gt;% 
+  filter(fmtburden != &quot;.&quot;, fmtburden != &quot;4 No Income&quot;) %&gt;% 
+  mutate(fmtburden = str_replace(fmtburden, &quot;Greater than 50%&quot;, &quot;50% or More&quot;)) %&gt;% 
+  group_by_(&quot;year&quot;, &quot;fmtburden&quot;) %&gt;%  
+  summarise_(new_y = as.formula(
+  paste0(&quot;~ median(&quot;,&quot;zinc2&quot;, &quot;,na.rm=T)&quot;))) %&gt;% 
+
+
+  ggplot(aes_string(x = &quot;year&quot;, y = &quot;new_y&quot;, color = &quot;fmtburden&quot;)) + 
+  geom_line(size = 1) + 
+  labs(title = &quot;Relationship between Household \nIncome and Burden&quot;, 
+       y = &quot;Household Income&quot;, x = &quot;Year&quot;, color = &quot;Burden&quot;) +
+  scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, &quot;K&quot;)}) +
+  scale_colour_brewer(palette = &quot;Dark2&quot;) +
+  theme_tufte()
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Monthly Housing Costs and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;cleanyearsmonthly&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Regional Monthly Housing Costs and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">  cleanyearsmonthly %&gt;%  
+  group_by_(&quot;year&quot;,&quot;region&quot;, &quot;fmtburden&quot;) %&gt;%  
+  summarise_(new_y = as.formula(
+    paste0(&quot;~ median(&quot;,&quot;zsmhc&quot;, &quot;,na.rm=T)&quot;))) %&gt;% 
+  ggplot(aes_string(x = &quot;year&quot;, y = &quot;new_y&quot;, color = &quot;fmtburden&quot;)) + 
+  geom_line(size = 1) + 
+  facet_wrap(~region, labeller = as_labeller(regionNames)) + 
+  labs(title = &quot;Relationship between Monthly \nHousing Costs and Burden&quot;, 
+       y = &quot;Monthly Housing Costs ($)&quot;, x = &quot;Year&quot;, color = &quot;Burden&quot;) +
+  scale_colour_brewer(palette = &quot;Dark2&quot;) +
+  theme_tufte()
+</code></pre>
+
+<pre><code>## Error in eval(expr, envir, enclos): object &#39;cleanyearsmonthly&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Median Income Among Differing Census Regions in 2013</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+<pre><code>## Error in tbl_vars(y): object &#39;median_incomes&#39; not found
+</code></pre>
+
+<pre><code>## Error in map_df$zinc2_median: object of type &#39;closure&#39; is not subsettable
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Household Size and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Households and Poverty</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>MORE GRAPHS</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>## Error in eval(expr, envir, enclos): object &#39;clean_years&#39; not found
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Concluding Thoughts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Housing Affordability Has Decreased</p></li>
+<li><p>The 2007 Housing Bubble Crisis </p></li>
+<li><p>Different Housing Regions Affected Differently </p>
+
+<ul>
+<li>Western and Northeast Regions Vs. South and Midwest</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Future Questions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Does the Data in some graphs keep showing a downward slope? </p></li>
+<li><p>If we analyzed data from 2013 - 2016, would it show another potential, housing housing bubble?</p></li>
+<li><p>Our data is limited to 2013, so what is the housing situation most recently?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Ask Us Anything</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Cleaning the Data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Variables'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Household Income and Burden'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Monthly Housing Costs and Burden'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Regional Monthly Housing Costs and Burden'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Median Income Among Differing Census Regions in 2013'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Household Size and Burden'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Households and Poverty'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='MORE GRAPHS'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Concluding Thoughts'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Future Questions'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Ask Us Anything'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='NA'>
+         14
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
