@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Housing Affordability Over the Years</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Housing Affordability Over the Years">
+  <meta name="author" content="Nikolai, William, Sri, Lamb">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Housing Affordability Over the Years</h1>
+    <h2>An Exploration into America's Housing Sector</h2>
+    <p>Nikolai, William, Sri, Lamb<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction: Motivation and Dataset</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Data is chosen from the American Housing Survey (1985 - 2013)</p></li>
+<li><p>Burden = Housing Cost Over Monthly Income</p>
+
+<ul>
+<li>Households with zero/negative income have &quot;-1&quot; in data</li>
+</ul></li>
+<li><p>Goal: Housing Affordability </p></li>
+<li><p>Hypothesis: Affordability decreased due to key significant events </p></li>
+<li><p>US growing income inequality is indicator of:</p>
+
+<ul>
+<li>Housing affordability</li>
+<li>Shifting income brackets poor and rich</li>
+</ul></li>
+<li><p>2007 Housing Market Crash</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Cleaning the Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Combined Years:</p>
+
+<ul>
+<li>Dataset is split into fifteen datasets, one for each odd year between 1985 and 2013</li>
+<li>To standardize the data used data from 2003 - 2013</li>
+<li>Reorder the columns to exactly match that of our base (2003 onward)</li>
+<li>Combine every list of datasets into single dataset</li>
+</ul>
+
+<p>Clean Data:</p>
+
+<ul>
+<li>Initally removed NAs, expressed column in read_csv</li>
+<li>Set column names to lowercase, removed quotations</li>
+<li>Created column for owning and renting data (1= own, 2= rent)</li>
+<li>Write to csv (same for combined years)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Variables According to the HUD Document Data Set</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Variables</th>
+<th>Meanings</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Burden</td>
+<td>Household’s monthly housing cost divided by its monthly income</td>
+</tr>
+<tr>
+<td>Per</td>
+<td>Household Size</td>
+</tr>
+<tr>
+<td>ABLMED</td>
+<td>Median Income Adjusted for # of Bedrooms</td>
+</tr>
+<tr>
+<td>APLMED</td>
+<td>Median Income Adjusted for # of Persons</td>
+</tr>
+<tr>
+<td>ZSMHC</td>
+<td>Monthly housing costs</td>
+</tr>
+<tr>
+<td>ZINC2</td>
+<td>Household Income</td>
+</tr>
+<tr>
+<td>Assisted</td>
+<td>Asssisted Housing</td>
+</tr>
+<tr>
+<td>Year</td>
+<td>The Year of the Data</td>
+</tr>
+<tr>
+<td>Region</td>
+<td>Census Region</td>
+</tr>
+<tr>
+<td>fmtincrelpovcat</td>
+<td>HH Income Relative to Poverty Income</td>
+</tr>
+<tr>
+<td>fmtstructuretype</td>
+<td>Structure Type</td>
+</tr>
+<tr>
+<td>increlamipct</td>
+<td>HH Income relative to AMI (Percent)</td>
+</tr>
+<tr>
+<td>fmtcostmedrelamicat</td>
+<td>CostMed Relative to Median Income</td>
+</tr>
+<tr>
+<td>AMI</td>
+<td>Area median income</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Household Income and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Monthly Housing Costs and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>No Income Bracket
+
+<ul>
+<li>Not paying for costs</li>
+<li>Paying with trust funds</li>
+</ul></li>
+<li>Similar housing costs among burden brackets</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Regional Monthly Housing Costs and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The Northeast impacted first
+
+<ul>
+<li>Other regions lagged by two years
+<img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Median Income by Census Regions in 2013</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Household Size and Burden</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Households Relative to the Poverty Line</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Income of Median Area by House Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Burden and Median Housing Cost with Assistance</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Those needing assitance with reducment of total salary
+
+<ul>
+<li>Unemployment </li>
+<li>Monetary Crisis </li>
+</ul></li>
+<li>High cost brackets = Higher burdens with assistance </li>
+<li>Less mobility for single families </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Median Income Adjusted by Region</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Adjusted income per persons</li>
+<li>Bracketed by HUD indexes (0.70 = 1 person, 0.80 = 2, 1.00 = 4)</li>
+<li>Spike around 2010</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Median Income Adjusted for Bedrooms By Region</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li><p>Bracketedby HUD indexes </p>
+
+<ul>
+<li>(0.70 for 0, 0.90 for 2, 1.04 for 3)</li>
+</ul></li>
+<li><p>More discrepancy in burden levels between regions </p>
+
+<ul>
+<li>Larger homes in Midwest/South</li>
+</ul></li>
+<li><p>Purchasing parity higher in midwest/south</p></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Concluding Thoughts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Housing Affordability Has Decreased</p></li>
+<li><p>The 2007 Housing Bubble Crisis and it&#39;s Consequences</p></li>
+<li><p>Census Regions Differences </p>
+
+<ul>
+<li>Western and Northeast Regions Vs. South and Midwest</li>
+</ul></li>
+</ul>
+
+<h2>Future Questions / Ask Us Anything</h2>
+
+<ul>
+<li><p>Do these graphs continue to have decreasing slopes 2014 - Present? </p></li>
+<li><p>If we analyzed data from 2013 - 2016, would it show another potential, housing bubble?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Ask Us Anything</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction: Motivation and Dataset'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Cleaning the Data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Variables According to the HUD Document Data Set'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Household Income and Burden'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Monthly Housing Costs and Burden'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Regional Monthly Housing Costs and Burden'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Median Income by Census Regions in 2013'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Household Size and Burden'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Households Relative to the Poverty Line'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Income of Median Area by House Types'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Burden and Median Housing Cost with Assistance'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Median Income Adjusted by Region'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Median Income Adjusted for Bedrooms By Region'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Concluding Thoughts'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Ask Us Anything'>
+         15
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

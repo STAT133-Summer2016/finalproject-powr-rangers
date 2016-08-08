@@ -5,6 +5,8 @@
 /clean_data/clean_years.csv
 /clean_data/clean_sample.csv
 /raw_data/combined_years.csv
+/presentation/.cache*
+*.DS_Store
 
 *.zip
 
