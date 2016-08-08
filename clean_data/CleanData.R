@@ -124,7 +124,9 @@ clean_years <- combined_years %>%
   # Clean ownrent
   mutate(ownrent = factor(ownrent,   
                           levels = c("1", "2"), 
-                           labels = c("own", "rent"))) %>%
+                          labels = c("own", "rent")),
+         fmtburden = str_replace_all(fmtburden, "^[0-9] ", ""),
+         fmtstructuretype = str_replace_all(fmtstructuretype, "^[0-9] ", "")) %>%
   na_if("") %>%
   na_if("NA") %>%
   na_if("-5") %>%
