@@ -60,7 +60,7 @@ clean_years <- read_csv("../clean_data/clean_years.csv")
          y = "Median burden") +
     scale_colour_brewer(palette = "Dark2") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
-    theme_tufte()
+  theme_minimal(base_family = "serif")
 
 ```
 
@@ -127,7 +127,7 @@ usa_map <- map_df %>%
                    fill = zinc2_median, 
                    group = group)) + 
   coord_fixed(1.3) +
-  theme_tufte() +
+  theme_minimal(base_family = "serif") +
   scale_x_continuous(name = NULL,
                      labels = NULL,
                      breaks = NULL) +
@@ -190,7 +190,7 @@ clean_years %>%
 relative to poverty income") +
   scale_y_continuous(labels=function(x){paste0(x*100, "%")}) +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif") 
 ```
 
 This plot shows the amount of households in a given income group in a given year. Each household has been calculated a poverty treshold according to the Census Bureau’s official thresholds, based on family size and number of children. 
@@ -219,7 +219,7 @@ clean_years %>%
   labs(y = "Household Income", x = "Year", color = "Burden") +
   scale_y_continuous(limits=c(0,NA),breaks=c(0,20000,40000,60000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 
 ```
@@ -240,7 +240,7 @@ clean_years %>%
   labs(y = "Household Income ($)", x = "Year", color = "Burden") +
   scale_y_continuous(limits=c(0,NA),breaks=c(0,25000,50000,75000),labels=function(x){paste0(x/1000, "K")}) +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
   
 
 
@@ -265,7 +265,7 @@ cleanyearsmonthly %>%
   geom_line(size = 1) + 
   labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 
 ```
@@ -284,7 +284,7 @@ From this graph, you can take a more indepth look at the relationship between ho
   facet_wrap(~region, labeller = as_labeller(regionNames)) + 
   labs(y = "Monthly Housing Costs ($)", x = "Year", color = "Burden") +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 
 ```
@@ -311,7 +311,7 @@ clean_years %>%
        y="Income percentage of area median income",
        x = "Year") +
   scale_colour_brewer(palette = "Dark2") +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 
 ```
@@ -342,7 +342,7 @@ ggplot(assisted, aes(y = new_y,
                                "With Assistance"),
                     palette = "Set2")  +
   coord_flip() +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 ```
 
 The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
@@ -364,7 +364,7 @@ clean_years %>%
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
                       labels = regionNames) +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 
 ```
@@ -389,7 +389,7 @@ clean_years %>%
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
                       labels = regionNames) +
-  theme_tufte()
+  theme_minimal(base_family = "serif")
 
 ```
 
