@@ -29,7 +29,7 @@ library(ggthemes)
 
 ```{r, echo = F}
 
-clean_years <- read_csv("..//clean_years.csv")
+clean_years <- read_csv("../clean_data/clean_years.csv")
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
@@ -198,7 +198,7 @@ regions <- rbind(region_1, region_2, region_3, region_4) %>%
          region = as.character(region))
 
 median_incomes <- clean_years %>%
-  filter(year = 2013) %>%
+  ##filter(year == 2013) %>%
   mutate(region = as.character(region)) %>%
   group_by(region) %>%
   summarise(zinc2_median = median(zinc2, na.rm = T))

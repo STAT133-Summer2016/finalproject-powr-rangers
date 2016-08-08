@@ -14,9 +14,6 @@ knit        : slidify::knit2slides
 
 
 
-```
-## Error: '../mydeck/clean_years.csv' does not exist in current working directory ('/Users/Lamb/Documents/GitHub/finalproject-powr-rangers/presentation').
-```
 
 
 ## Introduction: Motivation and Dataset
@@ -88,23 +85,14 @@ clean_years %>%
   theme_tufte()
 ```
 
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 ---
 
 ## Monthly Housing Costs and Burden 
 
 
-
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'cleanyearsmonthly' not found
-```
+<img src="figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
 
 ---
 
@@ -125,46 +113,27 @@ clean_years %>%
   theme_tufte()
 ```
 
-```
-## Error in eval(expr, envir, enclos): object 'cleanyearsmonthly' not found
-```
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
 
 ---
 
 ## Median Income Among Differing Census Regions in 2013
 
-
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
-
-```
-## Error in tbl_vars(y): object 'median_incomes' not found
-```
-
-```
-## Error in map_df$zinc2_median: object of type 'closure' is not subsettable
-```
+<img src="figure/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
 --- 
 
 ## Household Size and Burden
 
 
-
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
 
 
 ---
 
 ## Households and Poverty 
 
-
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
+<img src="figure/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
 
 ---
@@ -172,10 +141,7 @@ clean_years %>%
 
 ## MORE GRAPHS
 
-
-```
-## Error in eval(expr, envir, enclos): object 'clean_years' not found
-```
+<img src="figure/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
 
 
 ---
