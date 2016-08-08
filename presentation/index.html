@@ -46,11 +46,21 @@
   </hgroup>
   <article data-timings="">
     <ul>
-<li><p>Our data extends from </p></li>
-<li><p>William&#39;s cleaning</p></li>
-<li><p>Sri&#39;s cleaning</p></li>
-<li><p>Plots</p></li>
-<li><p>Conclusion stuff</p></li>
+<li><p>Data is chosen from the American Housing Survey (1985 - 2013)</p></li>
+<li><p>Burden = Housing Cost Over Monthly Income</p>
+
+<ul>
+<li>Households with zero/negative income have &quot;-1&quot; in data</li>
+</ul></li>
+<li><p>Goal: Housing Affordability </p></li>
+<li><p>Hypothesis: Affordability decreased due to key significant events </p></li>
+<li><p>US growing income inequality is indicator of:</p>
+
+<ul>
+<li>Housing affordability</li>
+<li>Shifting income brackets poor and rich</li>
+</ul></li>
+<li><p>2007 Housing Market Crash</p></li>
 </ul>
 
   </article>
@@ -147,6 +157,10 @@
 <td>fmtcostmedrelamicat</td>
 <td>CostMed Relative to Median Income</td>
 </tr>
+<tr>
+<td>AMI</td>
+<td>Area median income</td>
+</tr>
 </tbody></table>
 
   </article>
@@ -158,10 +172,7 @@
     <h2>Household Income and Burden</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code>## Warning: Removed 2 rows containing missing values (geom_path).
-</code></pre>
-
-<p><img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
+    <p><img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -175,7 +186,13 @@
     <p><img src="assets/fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" /></p>
 
 <ul>
-<li>People using savings, not paying for costs, paying with their trust funds</li>
+<li>No Income Bracket
+
+<ul>
+<li>Not paying for costs</li>
+<li>Paying with trust funds</li>
+</ul></li>
+<li>Similar housing costs among burden brackets</li>
 </ul>
 
   </article>
@@ -187,10 +204,13 @@
     <h2>Regional Monthly Housing Costs and Burden</h2>
   </hgroup>
   <article data-timings="">
-    <p><img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
+    <ul>
+<li>The Northeast impacted first
 
 <ul>
-<li>The Northeast was impacted first, and then the other regions lagged by two years </li>
+<li>Other regions lagged by two years
+<img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></li>
+</ul></li>
 </ul>
 
   </article>
@@ -199,7 +219,7 @@
 
 <slide class="" id="slide-7" style="background:;">
   <hgroup>
-    <h2>Median Income Among Differing Census Regions in 2013</h2>
+    <h2>Median Income by Census Regions in 2013</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
@@ -213,7 +233,7 @@
     <h2>Household Size and Burden</h2>
   </hgroup>
   <article data-timings="">
-    <p><img src="assets/fig/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"></p>
+    <p><img src="assets/fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
@@ -232,7 +252,7 @@
 
 <slide class="" id="slide-10" style="background:;">
   <hgroup>
-    <h2>Income Compared to Area&#39;s Median by House TypeS</h2>
+    <h2>Income of Median Area by House Types</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
@@ -243,10 +263,21 @@
 
 <slide class="" id="slide-11" style="background:;">
   <hgroup>
-    <h2>Burden Based on Median Housing Cost with Assistance</h2>
+    <h2>Burden and Median Housing Cost with Assistance</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
+
+<ul>
+<li>Those needing assitance with reducment of total salary
+
+<ul>
+<li>Unemployment </li>
+<li>Monetary Crisis </li>
+</ul></li>
+<li>High cost brackets = Higher burdens with assistance </li>
+<li>Less mobility for single families </li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -254,15 +285,15 @@
 
 <slide class="" id="slide-12" style="background:;">
   <hgroup>
-    <h2>&quot;Median Income Adjusted for the Number of People by Region</h2>
+    <h2>Median Income Adjusted by Region</h2>
   </hgroup>
   <article data-timings="">
     <p><img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
 
 <ul>
-<li><p>Adjusted income per persons</p></li>
-<li><p>Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)</p></li>
-<li><p>Spike around 2010 associated with financial crisis</p></li>
+<li>Adjusted income per persons</li>
+<li>Bracketed by HUD indexes (0.70 = 1 person, 0.80 = 2, 1.00 = 4)</li>
+<li>Spike around 2010</li>
 </ul>
 
   </article>
@@ -270,92 +301,65 @@
 </slide>
 
 <slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Median Income Adjusted for Bedrooms By Region</h2>
+  </hgroup>
   <article data-timings="">
     
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li><p>Bracketedby HUD indexes </p>
+
+<ul>
+<li>(0.70 for 0, 0.90 for 2, 1.04 for 3)</li>
+</ul></li>
+<li><p>More discrepancy in burden levels between regions </p>
+
+<ul>
+<li>Larger homes in Midwest/South</li>
+</ul></li>
+<li><p>Purchasing parity higher in midwest/south</p></li>
+</ul>
+
+</div>
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-14" style="background:;">
   <hgroup>
-    <h2>Median Income Adjusted for Number of Bedrooms By Region</h2>
+    <h2>Concluding Thoughts</h2>
   </hgroup>
   <article data-timings="">
-<<<<<<< HEAD
-    
-<div style='float:left;width:48%;' class='centered'>
-  <p><img src="figure/unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"></p>
-=======
-    <p><img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" /></p>
-
-<p>Adjusted income per bedroom</p>
-
-<p>Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)</p>
->>>>>>> 4cc4bf45a889f258f755daab259e45e54fcb1d08
-
-</div>
-<div style='float:right;width:48%;'>
-  <ul>
-<li><p>Adjusted income per bedroom</p></li>
-<li><p>Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)</p></li>
-<li><p>More discrepancy in burden levels between the Midwest/South and Northeast/West </p>
+    <ul>
+<li><p>Housing Affordability Has Decreased</p></li>
+<li><p>The 2007 Housing Bubble Crisis and it&#39;s Consequences</p></li>
+<li><p>Census Regions Differences </p>
 
 <ul>
-<li>Larger homes in the Midwest/South</li>
+<li>Western and Northeast Regions Vs. South and Midwest</li>
 </ul></li>
-<li><p>Purhasing parity shoudl be higher in midwest/south, not expressed in data</p></li>
 </ul>
 
-</div>
+<h2>Future Questions / Ask Us Anything</h2>
+
+<ul>
+<li><p>Do these graphs continue to have decreasing slopes 2014 - Present? </p></li>
+<li><p>If we analyzed data from 2013 - 2016, would it show another potential, housing bubble?</p></li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-15" style="background:;">
   <hgroup>
-    <h2>Concluding Thoughts</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Housing Affordability Has Decreased</p>
-
-<p>The 2007 Housing Bubble Crisis and it&#39;s Consequences</p>
-
-<p>Census Regions Differences </p>
-
-<ul>
-<li>Western and Northeast Regions Vs. South and Midwest</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-16" style="background:;">
-  <hgroup>
-    <h2>Future Questions</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li><p>Does the Data in some graphs keep showing a downward slope? </p></li>
-<li><p>If we analyzed data from 2013 - 2016, would it show another potential, housing housing bubble?</p></li>
-<li><p>Our data is limited to 2013, so what is the housing situation most recently?</p></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-17" style="background:;">
-  <hgroup>
     <h2>Ask Us Anything</h2>
   </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-18" style="background:;">
   <article data-timings="">
     
   </article>
@@ -404,7 +408,7 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Median Income Among Differing Census Regions in 2013'>
+        data-slide=7 title='Median Income by Census Regions in 2013'>
          7
       </a>
     </li>
@@ -422,56 +426,38 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Income Compared to Area&#39;s Median by House TypeS'>
+        data-slide=10 title='Income of Median Area by House Types'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Burden Based on Median Housing Cost with Assistance'>
+        data-slide=11 title='Burden and Median Housing Cost with Assistance'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='&quot;Median Income Adjusted for the Number of People by Region'>
+        data-slide=12 title='Median Income Adjusted by Region'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='NA'>
+        data-slide=13 title='Median Income Adjusted for Bedrooms By Region'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Median Income Adjusted for Number of Bedrooms By Region'>
+        data-slide=14 title='Concluding Thoughts'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='Concluding Thoughts'>
+        data-slide=15 title='Ask Us Anything'>
          15
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Future Questions'>
-         16
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Ask Us Anything'>
-         17
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='NA'>
-         18
       </a>
     </li>
   </ul>

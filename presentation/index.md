@@ -18,13 +18,21 @@ knit        : slidify::knit2slides
 
 ## Introduction: Motivation and Dataset
 
-* Our data extends from 
+- Data is chosen from the American Housing Survey (1985 - 2013)
 
-* William's cleaning
-* Sri's cleaning
-* Plots
-* Conclusion stuff
+- Burden = Housing Cost Over Monthly Income
+  
+  - Households with zero/negative income have "-1" in data
 
+- Goal: Housing Affordability 
+
+- Hypothesis: Affordability decreased due to key significant events 
+ 
+- US growing income inequality is indicator of:
+  - Housing affordability
+  - Shifting income brackets poor and rich
+  
+- 2007 Housing Market Crash
 
 ---
 
@@ -66,15 +74,11 @@ fmtincrelpovcat |HH Income Relative to Poverty Income
 fmtstructuretype | Structure Type
 increlamipct | HH Income relative to AMI (Percent)
 fmtcostmedrelamicat | CostMed Relative to Median Income 
+AMI | Area median income 
 
 ---
 
 ## Household Income and Burden
-
-
-```
-## Warning: Removed 2 rows containing missing values (geom_path).
-```
 
 <img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
@@ -82,23 +86,23 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ## Monthly Housing Costs and Burden 
 
-
 <img src="assets/fig/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
-
-
-- People using savings, not paying for costs, paying with their trust funds
+- No Income Bracket
+  - Not paying for costs
+  - Paying with trust funds
+- Similar housing costs among burden brackets
 
 ---
 
 ## Regional Monthly Housing Costs and Burden
 
+- The Northeast impacted first
+  - Other regions lagged by two years
 <img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
-
-- The Northeast was impacted first, and then the other regions lagged by two years 
 
 ---
 
-## Median Income Among Differing Census Regions in 2013
+## Median Income by Census Regions in 2013
 
 <img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
@@ -106,8 +110,7 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 ## Household Size and Burden
 
-
-![plot of chunk unnamed-chunk-7](assets/fig/unnamed-chunk-7-1.png)
+<img src="assets/fig/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
 
 
 ---
@@ -116,91 +119,79 @@ fmtcostmedrelamicat | CostMed Relative to Median Income
 
 <img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
-
 ---
 
-
-## Income Compared to Area's Median by House TypeS
+## Income of Median Area by House Types
 
 <img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
 
-
 ---
 
-## Burden Based on Median Housing Cost with Assistance
-
+## Burden and Median Housing Cost with Assistance
 <img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
-
+- Those needing assitance with reducment of total salary
+  - Unemployment 
+  - Monetary Crisis 
+- High cost brackets = Higher burdens with assistance 
+- Less mobility for single families 
 
 ---
 
-## "Median Income Adjusted for the Number of People by Region
+## Median Income Adjusted by Region
 
 <img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 - Adjusted income per persons
-
-- Bracketed by HUD indexes (0.70 for 1 person, 0.80 for 2, 1.00 for 4)
-
-- Spike around 2010 associated with financial crisis
-
-
----
+- Bracketed by HUD indexes (0.70 = 1 person, 0.80 = 2, 1.00 = 4)
+- Spike around 2010
 
 --- &twocol
 
-## Median Income Adjusted for Number of Bedrooms By Region
+## Median Income Adjusted for Bedrooms By Region
 
 *** =left
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
+![plot of chunk unnamed-chunk-12](assets/fig/unnamed-chunk-12-1.png)
 
 
 *** =right
 
-<<<<<<< HEAD
-=======
-<img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
->>>>>>> 4cc4bf45a889f258f755daab259e45e54fcb1d08
-
-- Adjusted income per bedroom
-
-- Bracketedby HUD indexes (0.70 for 0, 0.90 for 2, 1.04 for 3)
-
-- More discrepancy in burden levels between the Midwest/South and Northeast/West 
+- Bracketedby HUD indexes 
   
-  - Larger homes in the Midwest/South
-
-- Purhasing parity shoudl be higher in midwest/south, not expressed in data
+  - (0.70 for 0, 0.90 for 2, 1.04 for 3)
+  
+- More discrepancy in burden levels between regions 
+  
+  - Larger homes in Midwest/South
+  
+- Purchasing parity higher in midwest/south
 
 ---
 
 ## Concluding Thoughts
 
-Housing Affordability Has Decreased
+- Housing Affordability Has Decreased
 
-The 2007 Housing Bubble Crisis and it's Consequences
+- The 2007 Housing Bubble Crisis and it's Consequences
 
-Census Regions Differences 
-  
+- Census Regions Differences 
+
   - Western and Northeast Regions Vs. South and Midwest
+  
+## Future Questions / Ask Us Anything
 
----
+
+- Do these graphs continue to have decreasing slopes 2014 - Present? 
 
 
-## Future Questions 
-
-* Does the Data in some graphs keep showing a downward slope? 
-
-* If we analyzed data from 2013 - 2016, would it show another potential, housing housing bubble?
-
-* Our data is limited to 2013, so what is the housing situation most recently?
+- If we analyzed data from 2013 - 2016, would it show another potential, housing bubble?
 
 
 ---
+
 
 ## Ask Us Anything
 
 
 
----
+
