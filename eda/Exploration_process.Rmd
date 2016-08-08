@@ -1,8 +1,7 @@
 ---
 title: "Exploration process"
-author: "Nikolai Myllymäki"
-date: "7 August 2016"
 output: html_document
+runtime: shiny
 ---
 ```{r, include=F}
 library(ggplot2)
@@ -55,7 +54,43 @@ clean_years %>%
 ## But we want to analyze the effect of falling incomes as well. To be expanded.
 ```
 
-Next we wanted to include the first version of the shiny app. This was very much a tool, since it still needed manual loading of data and didn't have options for changing the y axis variable. Still, using the app for exploring variables was very beneficial. We found out that many of the grouping variables where numeric where they should have been factors or strings, and updated the data cleaning file accordingly. We also decided on the next production plots on the ideas from the shiny-powered brainstorming session. The first version of the Shiny app can be found in the folder shiny1.
+Next we wanted to include the first version of the shiny app. This was very much a tool, since it still needed manual loading of data and didn't have options for changing the y axis variable. 
+
+```{r, echo=FALSE}
+ sidebarLayout(
+    sidebarPanel(
+      
+      selectInput("sel_var",
+                  label = "Grouping variable",
+                  choices = names(clean_sample),
+                  # Select "ownrent" as initial value to avoid getting a 
+                  # non-categorical variable by default
+                  selected = "ownrent")
+      
+      ),
+    
+    mainPanel(
+    )
+  )
+
+renderPlot({ 
+    
+     clean_sample %>%  
+      # Use NSE
+      group_by_("year", input$sel_var) %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise(burden_year = median(burden, na.rm = T)) %>%  
+      # Use NSE
+      ggplot(aes_string(x = "year",   
+                        y = "burden_year",   
+                        colour = input$sel_var)) +  
+      geom_line()
+
+  })
+```
+
+Still, using the app for exploring variables was very beneficial. We found out that many of the grouping variables where numeric where they should have been factors or strings, and updated the data cleaning file accordingly. We also decided on the next production plots on the ideas from the shiny-powered brainstorming session. The first version of the Shiny app can also be found in the folder /shiny_first.
 
 ```{r, echo=F}
 clean_sample %>%
@@ -70,7 +105,55 @@ clean_sample %>%
        title = "APLmed by region")
 ```
 
-We added plots and ran into some column type issues that were addressed in the data parsing pipeline. For example in the graph above, region had to be converted from numeric to a factor. Mostly, our experimenting was done on the Shiny app, so there are not too many old graphs to begin with: most ggplot code was developed very much like it is currently on the paper. After doing different versions of time series based on the shiny app, we felt that there are aspects of the data that required different types of plots. We did the map, which was very similar to what can be seen on the paper right now, and a couple of bar charts showing burden with or without assistance.
+We added plots and ran into some column type issues that were addressed in the data parsing pipeline. For example in the graph above, region had to be converted from numeric to a factor. 
+
+We updated the shiny app to include more modifiable variables and to use the whole dataset, as can be seen from the final version of the app. Mostly, our experimenting was done on the Shiny app, so there are not too many old graphs to begin with. Most ggplot code was developed very much like it is currently on the paper with the help of the shiny app.
+
+```{r, echo=F}
+  sidebarLayout(
+    sidebarPanel(
+      
+      selectInput("sel_color",
+                  label = "Colour",
+                  choices = names(clean_years),
+                  # Select "ownrent" as initial value to avoid getting a 
+                  # non-categorical variable by default
+                  selected = "ownrent"),
+      selectInput("sel_y",
+                  label = "Y axis",
+                  choices = names(clean_years),
+                  # Select "ownrent" as initial value to avoid getting a 
+                  # non-categorical variable by default
+                  selected = "burden"),
+      selectInput("sel_x",
+                  label = "X axis",
+                  choices = names(clean_years),
+                  # Select "ownrent" as initial value to avoid getting a 
+                  # non-categorical variable by default
+                  selected = "year")
+      ),
+    
+    mainPanel(
+    )
+  )
+
+renderPlot({ 
+     clean_years %>%  
+      # Use NSE
+      group_by_(input$sel_x, input$sel_color) %>%  
+      # Take the median instead of mean to avoid extreme observations skewing the 
+      # result.
+      summarise_(new_y= as.formula(paste0("~ median(",input$sel_y, ",na.rm=T)"))) %>%  
+      # Use NSE
+      ggplot(aes_string(x = input$sel_x,   
+                        y = "new_y",   
+                        colour = input$sel_color)) +  
+      geom_line()
+
+  })
+```
+
+After doing different versions of time series based on the shiny app, we felt that there are aspects of the data that required different types of plots. We did the map, which was very similar to what can be seen on the paper right now, and a couple of bar charts showing burden with or without assistance.
 
 ```{r, echo = F, message=F, error=F, warning=FALSE}
 clean_sample %>% filter(assisted == 0) %>% 
@@ -110,7 +193,7 @@ clean_sample %>% filter(assisted == 1) %>%
   coord_flip()
 ```
 
-We received very good feedback that the colour scheme on the bar charts was a bit jarring, and that readability could be improved with a stacked version of the plot. We changed accordingly.
+We received feedback that the colour scheme on the bar charts was a bit jarring, and that readability could be improved with a stacked version of the plot. We changed accordingly.
 
 ```{r, echo = F, message=F, error=F, warning=FALSE}
 assisted = clean_sample %>% filter(!is.na(assisted)) %>% 
@@ -135,4 +218,4 @@ ggplot(assisted, aes(y = new_y,
   coord_flip()
 ```
 
-Colours were not rainbows anymore, but we still modified these by trying a bunch of different colour schemes from colorbrewer2.org. We updated the graphs in the paper to the clean tufte theme, which also happens to have the same font as default latex article output. We also updated the shiny app to include more modifiable variables, as can be seen from the final version.
+Colours were not rainbows anymore, but we still modified these by trying a bunch of different colour schemes from colorbrewer2.org. We updated the graphs in the paper to the clean tufte theme, which also happens to have the same font as default latex article output. 
