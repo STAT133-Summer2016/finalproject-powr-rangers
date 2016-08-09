@@ -42,8 +42,9 @@ library(ggthemes)
 ###Graphical findings
 
   The inital plot measures the housing burden levels across the United States:
+  
 ```{r, echo = F, fig.cap="Median Burden across Years and Household sizes"}
-clean_years <- read_csv("../clean_data/clean_years.csv")
+clean_years <- read_csv("../clean_data/clean_sample.csv")
 
   clean_years %>%
     mutate(per = cut(per, 
@@ -152,7 +153,12 @@ usa_map
   The household median monthly incomes vary between different census regions from 32200 dollars in the South to nearly 25% higher, 40000, in the West. The Northeast trails closely behind the West with 37267.50 dollars, and the Midwest is closer to the South with a median income of 35000.
   While the dataset doesn't have more granular location data, even these four regions are very distinct from each other. The large high-income cities in the Northeast and the West likely contribute to the higher respective median incomes, while more rural Midwest and South are poorer.
 
-```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=5, fig.height=5}
+```{r, echo = FALSE}
+regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
+
+```
+
+```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=4, fig.height=4}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -163,7 +169,7 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) + 
-  labs(x = "Year", y = "Median Adjusted Income (per persons)") + 
+  labs(x = "Year", title = "Median Adjusted Income (per persons)") + 
   scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
@@ -180,7 +186,7 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) +
-  labs(x = "Year", y = "Median Adjusted Income (per bedroom)") +
+  labs(x = "Year", title = "Median Adjusted Income (per bedroom)") +
   scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
@@ -239,12 +245,6 @@ relative to poverty income") +
   This plot shows the amount of households in a given income group in a given year. Each household has been calculated a poverty treshold according to the Census Bureau’s official thresholds, based on family size and number of children. 
   As can be seen from the plot, the amount of people in different income groups stayed relatively constant between 1985 and 2007. The majority of people earned over twice the poverty income, while little under a fifth of the population was in poverty. This stable relationship broke noticeably in the financial crisis of 2007 and the following recession, when the amount of people in poverty started a quite steep and steady climb upwards. 
   Interestingly, the income brackets of 100%-200% stayed almost exactly the same size as before, while the increase in poverty was in effect solely the result of the dwindling of the highest (over 200% of poverty income) income bracket. A reasonable explanation would be the effect of increasing unemployment, with previously employed well-off people dropping to unemployment and thus small or no income. The reality can be more nuanced, with people dropping to the middle income groups and a simultaneous equally large movement from these brackets to poverty, but the big picture of large impacts in poverty following the financial crisis stays the same.
-
-
-```{r, echo = FALSE}
-regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
-
-```
 
 ```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden"}
 ###### Household Income
