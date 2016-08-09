@@ -158,7 +158,7 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
-```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=4, fig.height=4}
+```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=3.5, fig.height=4}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -174,7 +174,8 @@ clean_years %>%
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
                       labels = regionNames) +
-  theme_minimal(base_family = "serif")
+  theme_minimal(base_family = "serif") +
+  theme(legend.position = "none", axis.title.y = element.blank())
 
 clean_years %>%
   group_by(year, region) %>%  
