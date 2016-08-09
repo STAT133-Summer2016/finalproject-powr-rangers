@@ -3,7 +3,10 @@ title: "Exploring United States Housing Affordability"
 output: 
   pdf_document: 
     fig_caption: yes
-    latex_engine: xelatex
+    latex_engine: 
+header-includes:
+#- \usepackage{subfig}
+- \usepackage{subcaption}
 ---
 
 ```{r setup, include=FALSE}
@@ -145,7 +148,7 @@ usa_map <- map_df %>%
                         labels=function(x){paste0("$",x %/% 100 / 10, "K")})
 ```
 
-```{r, echo=F}
+```{r, echo=F, fig.cap="Median Income across Census Regions"}
 usa_map
 ```
 
@@ -158,7 +161,11 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```
 
-```{r, echo = FALSE, fig.cap="Median Income Adjusted for the Number of People by Region", fig.width=3.5, fig.height=4}
+```{r, echo = FALSE, fig.height=1, fig.cap='Median Adjusted Income per person (left) and per bedroom (right)'}
+ggplot() + theme(panel.background = element_rect(fill = 'white', colour = 'white'))
+```
+
+```{r, echo = FALSE, fig.width=3.5, fig.height=5, fig.cap='one plotthe other one'}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -169,13 +176,16 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) + 
-  labs(x = "Year", title = "Median Adjusted Income (per persons)") + 
-  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
+  labs(x = "Year") + 
+  scale_y_continuous(labels = function(x){paste0(x/1000, "K")},
+                     limits = c(20000, 80000)) +
   scale_colour_brewer(palette = "Dark2", 
                       name = "Region", 
                       labels = regionNames) +
-  theme_minimal(base_family = "serif") +
-  theme(legend.position = "none")
+  theme_minimal(base_size = 10,
+                base_family = "serif") +
+  theme(legend.position = "top",
+        axis.title.y = element_blank())
 
 clean_years %>%
   group_by(year, region) %>%  
@@ -187,17 +197,21 @@ clean_years %>%
                   y = new_y,   
                   colour = region)) + 
   geom_line(size = 1) +
-  labs(x = "Year", title = "Median Adjusted Income (per bedroom)") +
-  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")}) +
+  labs(x = "Year") +
+  scale_y_continuous(labels=function(x){paste0(x/1000, "K ")},
+                     limits = c(20000, 80000)) +
   scale_colour_brewer(palette = "Dark2",
                       name = "Region", 
                       labels = regionNames) +
-  theme_minimal(base_family = "serif")
-
+  theme_minimal(base_size = 10,
+                base_family = "serif") +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        legend.position = "top")
 ```
 
   In order to better understand the regional differences in income, the incomes were adjusted by certain variables. 
-  The first plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). APLmed is the adjusted median household income per person. This was precaculated using Housing and Urban Development (HUD) indexes. For example, a one person household's income is adjusted by a factor of 0.70, two by 0.80, and so on with a four person household beig adjusted by 1.00 (or having no change from the median household income). The reason for no adjustment to a four person househodl income is becasue the median hosuehold size in the United States is about four persons. 
+  The first plot compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). APLmed is the adjusted median household income per person. This was precaculated using Housing and Urban Development (HUD) indexes. For example, a one person household's income is adjusted by a factor of 0.70, two by 0.80, and so on with a four person household being adjusted by 1.00 (or having no change from the median household income). The reason for no adjustment to a four person household income is because the median household size in the United States is about four persons. 
   It is clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and West are by far the most productive (by GDP) regions in the United States. 
   The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street and Main Street- which refers to the Washington D.C. economy) while the other regions took some time to correct for the downturn in the financial market.
   The second plot of the graph depicts ABLmed versus year. ABLmed signifies the median adjusted income for the number of bedrooms in a household's living quarters. ABlmed was calculated using precaculated HUD indexes. Here, zero bedrooms was adjusted by a factor of 0.70, two bedrooms by 0.90, and so on. Three bedroom properties were adjusted by a factor of 1.04, because the median number of bedrooms in a property is roughly three bedrooms
