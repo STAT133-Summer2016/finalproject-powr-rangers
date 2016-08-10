@@ -24,30 +24,33 @@ library(scales)
 library(maps)
 library(ggthemes)
 ```
+
+<br>
+<br>
+<br>
+
 #Abstract
 
-
-
-
-##Introduction
-
-  The dataset was taken from the American Housing Survey, which derives sets of data from 1985 and on. The data set includes categorizing each housing unit by factors such as affordability, income through fair market rent, burden, and the adjusted median income. Certain factors, such as Poverty Income, is based on the Census Bureau's official thresholds. 
+The dataset was taken from the American Housing Survey, which derives sets of data from 1985 and on. The data set includes categorizing each housing unit by factors such as affordability, income through fair market rent, burden, and the adjusted median income. Certain factors, such as Poverty Income, is based on the Census Bureau's official thresholds. 
   
-  The goal is to determine whether housing affordability has increased or decreased over the last few decades. Our initial hypothesis assumes that housing affordability within the United States has decreased due to key, significant events that have occurred within the last few years. The United State's growing income inequality can be attributed to the current state of housing affordability, and is a clear indicator of the shifting income brackets between who is poor and who is rich. Another major event that could have potentially affected the current state of housing affordability, is the 2007 Housing Market crash that affected the entire country, and even the world. Amongst all of the foreclosures, loan defaults, and stock market crash, we will closely examine the years between 2007 and 2011 to capture a better sense of the status of the housing market's affordability.
+  The goal is to determine whether housing affordability has increased or decreased over the last few decades. Our initial hypothesis assumes that housing affordability within the United States has decreased due to key, significant events that have occurred within the last few years. The United State's growing income inequality can be attributed to the current state of housing affordability, and is a clear indicator of the shifting income brackets between who is poor and who is rich. Another major event that has potential consequences on the current state of housing affordability, is the 2007 Housing Market crash. Amongst all of the foreclosures, loan defaults, and stock market crash, we will closely examine the years between 2007 and 2011 to capture a better sense of the status of the housing market's affordability.
 
-###Cleaning data
+The main metric that is referred to in this paper is burden. Burden is defined by the proportion of household income that is spent towards the cost of housing. This metric is then further dissected by analyzing against various variables and collating data on contributing factors, such as income. The first data explored is income data across the four designated regions in the United States (Northeast, Midwest, South, West). The adjusted incomes (per persons and per bedroom) are also considered, as certain regions may have different averages for household and property sizes, which could skew the unadjusted income data. The behavior of household income, bracketed in ranges in accordance to census data over time, is displayed to provide a better understanding of the changes in burden over time. The household incomes are then compared versus burden over time. It is found that the higher income levels generally have lower housing burdens, and those burdens actually decrased over time, while burdens in the lower income brackets were generally higher and increased over time. Also, the housing burdens in the Northeast and West are generally higher than the Midwest and South. Finally, to elucidate the gap in burden levels across high and low incomes, the housheold burden amongst owners and renters, and those with and without governement assistance is considered. Here it is found that owning households tend to have lower burden levels, as do those households with no assistance. 
+  
+  A common issue adressed throughout this paper is the anomaly in datasets around the 2007-2011 period, which  roughly marks the duration of the financial crisis. In particular, the lag in the downward spike after 2007 between the Northeast and the other regions is discussed. This section of the data helps in understading the dynamics of burden and income, as the financial crisis was recent and nationwide.  
+  
+  \newpage
+
+##Cleaning the Data
 
   Initially, the dataset is split into fifteen datasets, one for each odd year between 1985 and 2013. Due to differences in how the survey was conducted over the years, each dataset has varying column names and positions, and, for surveys performed earlier than 2003, missing columns. To standardize the data, we used the format of the more modern datasets, i.e the datasets from 2003 to 2013. Thus, we begin by appending a column onto each dataset to mark which year that data was gathered, remove an extraneous column from the 2009 dataset, and then simply combine the datasets. For the older years, the datasets must again be split into two groups as some columns are named differently and do not fit with our standard. Once we rename the columns, we add the missing columns that dictate the raw, adjusted by growth, and adjusted by people income limits for each household. These income limits specifically determine what the extremely low income bracket is for the area each household is in. For each list of datasets, we reorder the columns to exactly match that of our base, the datasets gathered from 2003 onward. Finally we combine every list of datasets into a single dataset, and then store it in a comma separated file called combined_years. 
   
   The combined_years data was read into a dataframe using the read_csv function. Then, the combined years dataset was cleaned using the piping methods in dplyr. The data was rather messy, with unecessary quotations around character values and inconsistent letter cases in the column names. This was rectified by setting all the column names to lowercase and removing all the quotations from character values. One the main premises of this paper is comparing the burden of household that are owning and renting. Since there was no explicit labeling of data corresponding to owning and renting households, the "ownrent" column was mutated to a factor with the correct labels. Finally, the data was written to a clean_years csv file. The source files used different nonsensical integers (negative numbers) to indicate NA values. These were converted to NAs while reading the dataset in so that the output data and graphs made stastical sense - negative numbers where the values should be positive skew the dataset. 
-
-###Analyzing the Data
-
-  The main metric that is referred to in this paper is burden. Burden is defined by the proportion of household income that is spent towards the cost of housing. This metric is then further dissected by analyzing against various variables and collating data on contributing factors, such as income. The first data explored is income data across the four designated regions in the United States (Northeast, Midwest, South, West). The adjusted incomes (per persons and per bedroom) are also considered, as certain regions may have different averages for household and property sizes, which could skew the unadjusted income data. The behavior of household income, bracketed in ranges in accordance to census data, over time is displayed to provide a better understanding of the changes in burden over time. The household incomes are then compared versus burden over time. here it is found that the higher income levels generally have lower housing burdens, and those burdens actually decrased over time, while burdens in the lower income brackets were generally higher and increased over time. Also, the housing burdens in the Northeast and West are generally higher than the Midwest and South. Finally, to elucidate the gap in burden levels across high and low incomes, the housheold burden amongst owners and renters, and those with and without governement assistance is considered. Here it is found that owning households tend to have lower burden levels, as do those households with no assistance. 
   
-  A common issue adressed throughout this paper is the anomaly in datasets around the 2007-2011 period, which  roughly marks the duration of the financial crisis. In particular, the lag in the downward spike after 2007 between the Northeast and the other regions is discussed. This section of the data helps in understading the dynamics of burden and income, as the financial crisis was recent and nationwide.  
 
-###Graphical findings
+
+
+##Graphical findings
   
 ```{r, echo = F, fig.cap="Median Burden across Years and Household sizes"}
 clean_years <- read_csv("../clean_data/clean_years.csv")
@@ -416,8 +419,7 @@ ggplot(assisted, aes(y = new_y,
  
  At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
 
-##Conclusion: 
-  
+#Conclusion: 
   
   The findings in this paper help elucidate income and household burden trends overtime. However, there are many holes in the actual data. The data grabbed uses gross incomes and groups data over large regions of the United States. While the spreads of incomes and housing costs may be low, the internal varation within each region will be fairly high. As a result, this does not help protray a full picture of burden level across the United States, namely in (sub)urban versus non urban areas. Also, the usage of gross income is inaccurate, as the median net income levels varied over time (even after adjusting for inflation), since taxation levels were much higher in the 1950s and 1960s than they are now- which means the burden levels are likely undervalued in the data during those decades.
   
