@@ -392,8 +392,10 @@ Figure 6: Relationship between Monthly Housing Costs and Burden
 
 ```
 \begin{center}
-Figure 7: Relationship between Monthly Housing Costs and Burden in different regions
+Figure 7: Relationship between Monthly Housing Costs and Burden in Different Regions
 \end{center}
+
+\vspace{48pt}
 
   Figure 7 illustrates the monthly housing costs by census regions (Northeast, Midwest, South, and West). It is interesting to note that the Northeast and West have higher monthly housing costs according to the figure. According to Forbes, a majority of the most overpriced cities are located in these two regions. ^3^ Figure 2 also supports this idea because median income is highest in these two regions. There is an interesting dip seen in the Northeast graph, which can be attributed to the Northeast being impacted earlier by the housing crisis. 
 
@@ -428,31 +430,40 @@ Figure 8: Income Compared to Area's Median Grouped by House Type
 
   Figure 8 charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wages increased, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
-```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE, fig.cap="Burden based on Median Housing Cost with Assistance"}
+```{r, fig.width=15, fig.height=10, echo = F, message=F,error=F, warning=FALSE, fig.cap="Burden based on Median Housing Cost with Assistance"}
 assisted = clean_years %>% filter(!is.na(assisted)) %>% 
       # Use NSE
-      group_by_("assisted", "fmtcostmedrelamicat") %>%  
+      group_by_("assisted", 
+                "fmtcostmedrelamicat") %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
       # result.
-      summarise_(new_y= as.formula(paste0("~ median(","burden", ",na.rm=T)"))) %>% 
+      summarise_(new_y= as.formula(
+        paste0("~ median(",
+               "burden", 
+               ",na.rm=T)"))) %>% 
       ungroup %>% 
       mutate(assisted = as.factor(assisted))
-ggplot(assisted, aes(y = new_y,   
-                  x = fmtcostmedrelamicat,
-                  fill = assisted, group = assisted)) +  
+ggplot(assisted, 
+       aes(y = new_y, 
+           x = fmtcostmedrelamicat,
+           fill = assisted, group = assisted)) +  
   geom_bar(
            stat="identity") + 
   labs(y="Burden",
        x = "",
        fill="Assistance") + 
-  scale_y_continuous(limits=c(0,1), labels=function(x){paste0(x*100, "%")}) +
-  scale_x_discrete(labels = function(x){str_replace_all(str_replace_all(x, "^[0-9] (.*)","\\1"), "LTE (.*)","<= \\1")}) +
+  scale_y_continuous(limits=c(0,1), 
+                     labels=function(x){paste0(x*100, "%")}) +
+  scale_x_discrete(labels = function(x){str_replace_all(
+    str_replace_all(x,
+                    "^[0-9] (.*)","\\1"), 
+    "LTE (.*)","<= \\1")}) +
   scale_fill_brewer("Assistance", 
                     labels = c("Without Assistance", 
                                "With Assistance"),
                     palette = "Set2")  +
   coord_flip() +
-  theme_minimal(base_family = "serif")
+  theme_minimal(base_family = "serif", base_size = 15)
 ```
 \begin{center}
 Figure 9: Burden based on Median housing cost with assistance
