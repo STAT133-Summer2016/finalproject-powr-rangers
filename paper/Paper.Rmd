@@ -48,13 +48,11 @@ The main metric that is referred to in this paper is burden. Burden is defined b
   Initially, the dataset is split into fifteen datasets, one for each odd year between 1985 and 2013. Due to differences in how the survey was conducted over the years, each dataset has varying column names and positions, and, for surveys performed earlier than 2003, missing columns. To standardize the data, we used the format of the more modern datasets, i.e the datasets from 2003 to 2013. Thus, we begin by appending a column onto each dataset to mark which year that data was gathered, remove an extraneous column from the 2009 dataset, and then simply combine the datasets. For the older years, the datasets must again be split into two groups as some columns are named differently and do not fit with our standard. Once we rename the columns, we add the missing columns that dictate the raw, adjusted by growth, and adjusted by people income limits for each household. These income limits specifically determine what the extremely low income bracket is for the area each household is in. For each list of datasets, we reorder the columns to exactly match that of our base, the datasets gathered from 2003 onward. Finally we combine every list of datasets into a single dataset, and then store it in a comma separated file called combined_years. 
   
   The combined_years data was read into a dataframe using the read_csv function. Then, the combined years dataset was cleaned using the piping methods in dplyr. The data was rather messy, with unecessary quotations around character values and inconsistent letter cases in the column names. This was rectified by setting all the column names to lowercase and removing all the quotations from character values. One the main premises of this paper is comparing the burden of household that are owning and renting. Since there was no explicit labeling of data corresponding to owning and renting households, the "ownrent" column was mutated to a factor with the correct labels. Finally, the data was written to a clean_years csv file. The source files used different nonsensical integers (negative numbers) to indicate NA values. These were converted to NAs while reading the dataset in so that the output data and graphs made stastical sense - negative numbers where the values should be positive skew the dataset. 
-  
 
-
-
-##Graphical findings
+#Graphical findings
   
 ```{r, echo = F, fig.cap="Median Burden across Years and Household sizes"}
+#Read in the cleaned data
 clean_years <- read_csv("../clean_data/clean_years.csv")
 
   clean_years %>%
@@ -94,30 +92,37 @@ regions_tbl <- html %>%
   html_table %>%
   .[[1]] 
 
-region_1 <- regions_tbl[2:7,] %>% 
-  gather(key = region, value = state, 1:2) %>% 
+region_1 <- regions_tbl[2:7, ] %>% 
+  gather(key = region, 
+         value = state, 1:2) %>% 
   slice(1:9) %>%
   mutate(region = 1)
   
-region_2 <- regions_tbl[10:15,] %>% 
-  gather(key = region, value = state, 1:2) %>% 
+region_2 <- regions_tbl[10:15, ] %>% 
+  gather(key = region, 
+         value = state, 1:2) %>% 
   mutate(region = 2)
 
 # Add missing Missouri
 region_2[6, 2] <- "Missouri"
 
 region_3 <- regions_tbl[18:27,] %>%  
-  gather(key = region, value = state, 1:2) %>% 
+  gather(key = region, 
+         value = state, 1:2) %>% 
   slice(c(-10, -15, -16)) %>%
   mutate(region = 3)
 
 region_4 <- 
   regions_tbl[30:37,] %>%  
-  gather(key = region, value = state, 1:2) %>% 
+  gather(key = region, 
+         value = state, 1:2) %>% 
   slice(1:13) %>%
   mutate(region = 4)
 
-regions <- rbind(region_1, region_2, region_3, region_4) %>%
+regions <- rbind(region_1, 
+                 region_2, 
+                 region_3, 
+                 region_4) %>%
   mutate(state = str_to_title(state),
          region = as.character(region))
 
@@ -141,7 +146,8 @@ us_map %>%
                    fill = zinc2_median, 
                    group = group)) + 
   coord_fixed(1.3) +
-  theme_tufte(base_size = 20, base_family = "serif") +
+  theme_tufte(base_size = 20, 
+              base_family = "serif") +
   scale_x_continuous(name = NULL,
                      labels = NULL,
                      breaks = NULL) +
@@ -167,7 +173,12 @@ us_map %>%
 
 ```{r, echo = FALSE}
 
-regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
+#Factoring for the region faceting
+
+regionNames = c("1" = "Northeast", 
+                "2" = "Midwest", 
+                "3" = "South", 
+                "4" = "West")
 
 ```
 
@@ -175,7 +186,10 @@ regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
 ```{r, echo = FALSE, fig.height=1, fig.cap='Median Adjusted Income per person (left) and per bedroom (right)'}
 
-ggplot() + theme(panel.background = element_rect(fill = 'white', colour = 'white'))
+ggplot() + 
+  theme(panel.background = element_rect(fill = 'white', 
+                                        colour = 'white'))
+
 ```
 
 ```{r, echo = FALSE, fig.width=3.5, fig.height=5, fig.cap='one plotthe other one'}
