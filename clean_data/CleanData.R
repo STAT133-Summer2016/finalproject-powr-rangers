@@ -46,7 +46,7 @@ NoQuotations <- function(x) {
   str_replace_all(x, "^\\'|\\'$", "")
 }
 # Total list of invalid values, done due to insufficient documentation.
-NA_LIST = c("","NA","-5","-6","-7","-9",".")
+NA_LIST = c("", "NA", "-5", "-6", "-7", "-9", ".", "''", "'NA'", "'-5'", "'-6'", "'-7'", "'-9'", "'.'")
 # Loading the most recent datasets first to give reference for other
 # two sets.
 base_files <- paste("../raw_data/hads",          
