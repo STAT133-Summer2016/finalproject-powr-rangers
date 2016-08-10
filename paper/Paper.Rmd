@@ -37,7 +37,7 @@ The main metric that is referred to in this paper is burden. Burden is defined b
 
 The dataset was taken from the American Housing Survey (AHS), which derives sets of data from 1985 and on. The data set includes categorizing each housing unit by factors such as affordability, income through fair market rent, burden, and the adjusted median income. Certain factors, such as Poverty Income, is based on the Census Bureau's official thresholds. 
   
-  The goal is to determine whether housing affordability has increased or decreased over the last few decades. Our initial hypothesis assumes that housing affordability within the United States has decreased due to key, significant events that have occurred within the last few years. The United State's growing income inequality can be attributed to the current state of housing affordability, and is a clear indicator of the shifting income brackets between who is poor and who is rich. Another major event that has potential consequences on the current state of housing affordability, is the 2007 Housing Market crash. Amongst all of the foreclosures, loan defaults, and stock market crash, we will closely examine the years between 2007 and 2011 to capture a better sense of the status of the housing market's affordability.
+  The goal is to determine whether housing affordability has increased or decreased over the last few decades. Our initial hypothesis assumes that housing affordability within the United States has decreased due to key, significant events that have occurred within the last few years. The United State's growing income inequality can be attributed to the current state of housing affordability, and is a clear indicator of the shifting income brackets between who is poor and who is rich. Another major event that has potential consequences on the current state of housing affordability, is the 2007 Housing Market crash. According to Business Insider, the end of 2010 saw a staggering 23.1% of all U.S. homeowners with a mortgage owed more on their homes than what their homes were worth. ^1^ Amongst all of the foreclosures, loan defaults, and stock market crash, we will closely examine the years between 2007 and 2011 to capture a better sense of the status of the housing market's affordability.
 
 ##Cleaning the Data
 
@@ -46,10 +46,13 @@ The dataset was taken from the American Housing Survey (AHS), which derives sets
   The combined_years data was read into a dataframe using the read_csv function. Then, the combined years dataset was cleaned using the piping methods in dplyr. The data was rather messy, with unecessary quotations around character values and inconsistent letter cases in the column names. This was rectified by setting all the column names to lowercase and removing all the quotations from character values. One the main premises of this paper is comparing the burden of household that are owning and renting. Since there was no explicit labeling of data corresponding to owning and renting households, the "ownrent" column was mutated to a factor with the correct labels. Finally, the data was written to a clean_years csv file. The source files used different nonsensical integers (negative numbers) to indicate NA values. These were converted to NAs while reading the dataset in so that the output data and graphs made stastical sense - negative numbers where the values should be positive skew the dataset. 
 
 #Findings
-  
-```{r, echo = F, fig.cap="Median Burden Across Years and Household Sizes"}
-#Read in the cleaned data
+##Initial Findings
 
+\vspace{24pt}
+  
+```{r, echo = F,fig.cap="Median Burden Across Years and Household Sizes", fig.height=3}
+
+#Read in the cleaned data
 clean_years <- read_csv("../clean_data/clean_years.csv")
 
   clean_years %>%
@@ -76,9 +79,10 @@ clean_years <- read_csv("../clean_data/clean_years.csv")
 Figure 1: Median burden across years and household sizes
 \end{center}
 
+\vspace{12pt}
   Figure 1 shows the development of median burden (proportion of housing costs relative to household income) from 1985 to 2013. The median burden varies dramatically between households of different sizes. The highest burden through the years has been on households of one person. This is understandable, since people living alone cannot split any costs between other earners.
   
-  Surprisingly, households of two people have the lowest burdens overall. Our hypothesis is that this is due to a large proportion of two-earner couples in this group. As housing cost burden is simply a household's monthly housing cost divided by its monthly income, households where all members are earners have a higher monthly income and a lower resulting burden. In households of 3 or more people, the burden picks up again. This is likely due to a larger amount of children and / or retirees in larger households. Also, households with 3 or more members tend to hae only one earner.
+  Surprisingly, households of two people have the lowest burdens overall. Our hypothesis is that this is due to a large proportion of two-earner couples in this group. As housing cost burden is simply a household's monthly housing cost divided by its monthly income, households where all members are earners have a higher monthly income and a lower resulting burden. In households of 3 or more people, the burden picks up again. This is likely due to a larger amount of children and/or retirees in larger households. Also, households with 3 or more members tend to hae only one earner.
   
   Another interesting thing is the dramatic increase of burden during the buildup to the financial crisis 2000-2007. The most probable exlanation is the housing market price bubble. Once the crisis hit in 2007, the effect of dropping incomes continued to increase burdens until 2011. Only in 2013 data did the burdens start to fall from the unprecedently high levels.
 
@@ -168,6 +172,7 @@ us_map %>%
 Figure 2: Median Income Across Census Regions
 \end{center}
 
+\vspace{6pt}
   To map income levels in different areas we used the four census regions in the dataset and joined them with a scraped table from mapsoftheworld.com. Using the table we could connect census regions to state names and thus colour a map of the continental US with census region incomes. We used median incomes instead of mean incomes to avoid skewing the results with outliers, and filtered the map to include the most recent year, 2013.
   
   The resulting figure 2 shows household median monthly incomes vary between different census regions from $39,900 in the South to nearly 25% higher, $49,600, in the Northeast. The West trails closely behind the Northeast with $48,000, and the Midwest is closer to the South with a median income of $43,900.
@@ -185,7 +190,7 @@ regionNames = c("1" = "Northeast",
 
 ```
 
-```{r, echo = FALSE, fig.width=3.5, fig.height=5, fig.cap='one plotthe other one'}
+```{r, echo = FALSE, fig.width=3.5, fig.height=4, fig.cap='one plotthe other one'}
 clean_years %>%
   group_by(year, region) %>%  
   # Take the median instead of mean to avoid extreme observations skewing the 
@@ -233,20 +238,17 @@ clean_years %>%
 Figure 3: Median Adjusted Income per person (left) and per bedroom (right)
 \end{center}
 
-  In order to better understand the regional differences in income, the incomes were adjusted by certain variables. 
+  In order to better understand the regional differences in income, the incomes were adjusted by certain variables. The first plot of Figure 3 compares the median income adjusted for number of persons by year (APLmed) for the four regions in the United States (Northeast, South, Midwest, West). APLmed is the adjusted median household income per person. This was precaculated using Housing and Urban Development (HUD) indexes. For example, a one person household's income is adjusted by a factor of 0.70, two by 0.80, and so on with a four person household being adjusted by 1.00 (or having no change from the median household income). The reason for no adjustment to a four person household income is because the median household size in the United States is about four persons. It is also clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and West are by far the most productive (by GDP) regions in the United States. 
   
-  The first plot of figure 3 compares APLmed by year for the four regions in the United States (Northeast, South, Midwest, West). APLmed is the adjusted median household income per person. This was precaculated using Housing and Urban Development (HUD) indexes. For example, a one person household's income is adjusted by a factor of 0.70, two by 0.80, and so on with a four person household being adjusted by 1.00 (or having no change from the median household income). The reason for no adjustment to a four person household income is because the median household size in the United States is about four persons. 
-  
-  It is clear that the Northeast and the West are the most expensive regions. This is makes sense given that the northeast and West are by far the most productive (by GDP) regions in the United States. 
-  
-  The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street) while the other regions took some time to correct for the downturn in the financial market.
-  
-  The second plot of figure 3 depicts the development of median income adjusted for the number of bedrooms in a household's living quarters. The adjusted median income was calculated using precaculated HUD indexes. Here, zero bedrooms was adjusted by a factor of 0.70, two bedrooms by 0.90, and so on. Three bedroom properties were adjusted by a factor of 1.04, because the median number of bedrooms in a property is roughly three bedrooms
+  The median adjusted income increases steadily (roughly linearly) over time. There is a decrease in income around 2010, correlated to the economic recession with a 2 year lag between the Northeast and the rest of the regions.The reason for this lag may be due to the fact that the financial center of the United States lies in the northeast, around New York City. So, when the 2008 crisis occurred the repercussions were immediately felt in the Northeast (Wall Street) while the other regions took some time to correct for the downturn in the financial market. The second plot of Figure 3 depicts the development of median income adjusted for the number of bedrooms in a household's living quarters. The adjusted median income was calculated using precaculated HUD indexes. Here, zero bedrooms was adjusted by a factor of 0.70, two bedrooms by 0.90, and so on. Three bedroom properties were adjusted by a factor of 1.04, because the median number of bedrooms in a property is roughly three bedrooms
   
   It is interesting to note that the disparity between the incomes increases between the Northeast and Western regions and the Midwest and South. This is likely because those living in the Midwest and South tend to live in larger homes, housing more bedrooms on average, relative to their incomes due to the higher housing affordability. However, this should mean that their incomes go 'further,' as they have more purchasing parity given the lower cost of living compared to the Northeast and the West. This is not shown in the graphs, which indicate that the income levels are significantly different. However, if housing affordability was factored into the calculation, the income disparity would be far less if not almost nonexistent. The lag in the downward trend after 2008 still occurs in the plots.
-  With the income information in hand, the burden data can be explored in further detail. 
 
-```{r, echo = FALSE, fig.cap = "Amount of households relative to poverty line"}
+With the income information in hand, the burden data can be explored in further detail. 
+
+##Further Exploration
+
+```{r, echo = FALSE, fig.cap = "Amount of Households Relative to the Poverty Line", fig.height = 3}
 clean_years %>% 
   # Group and summarise the amount of people in each poverty group each year
   group_by(fmtincrelpovcat, year) %>%
@@ -294,7 +296,7 @@ Figure 4: Amount of households relative to poverty line
   
   Interestingly, the income brackets of 100%-200% stayed almost exactly the same size as before, while the increase in poverty was in effect solely the result of the dwindling of the highest (over 200% of poverty income) income bracket. A reasonable explanation would be the effect of increasing unemployment, with previously employed well-off people dropping to unemployment and thus small or no income. The reality can be more nuanced, with people dropping to the middle income groups and a simultaneous equally large movement from these brackets to poverty, but the big picture of large impacts in poverty following the financial crisis stays the same.
 
-```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden"}
+```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden, fig.height = 1"}
 ###### Household Income
   ####overall graph
 clean_years %>% 
@@ -330,7 +332,7 @@ Figure 5: Relationship between Household Income and Burden
 
   As pictured in figure 5, the relationship between household income and burden is seen as a positive correlation. From the graph, you can see that higher income household have less burden to deal with, which makes sense because those with more money are able to pay off monthly costs more easily. Those with 50% more burden are near the poverty line. Figure 5 also shows a spike in households that have burden. Households with higher incomes started to pay more burdens, which can be attributed to 2007 financial housing market crisis.
 
-```{r, echo = FALSE, fig.cap = "Relationship between Monthly Housing Costs and Burden"}
+```{r, echo = FALSE, fig.cap = "Relationship between Monthly Housing Costs and Burden", fig.height = 3}
 
 cleanyearsmonthly <- clean_years %>% 
   select(year, zsmhc, region, fmtburden) %>% 
@@ -360,9 +362,14 @@ cleanyearsmonthly %>%
 Figure 6: Relationship between Monthly Housing Costs and Burden
 \end{center}
 
+At a certain point, regardless of income, housing costs stay the same because housing prices have increased  
+
+The no income line continues to have monthly housing costs due to people who lost their jobs, unemployment, trust fund recipients using their money, and people living off savings
+
+
   Figure 6 offers a more in-depth look at the relationship between housing costs and burden. It's interesting to see that all three burden lines are close to one another, which illustrates the principle that those with more money aren't buying more expensive houses. From figure 5 we saw that those with higher incomes have less burden, and those with lower incomes have higher burden. Each level of burden has similar housing costs, therefore reinforcing the idea that people are buying similar priced housing among the lower and middle classes. Again, a spike around 2010 is prevalent, which can be caused by the 2007 housing crisis. 
 
-```{r, echo= FALSE, fig.cap="Relationship between Monthly Housing Costs and Burden"}
+```{r, echo= FALSE, fig.cap="Relationship between Monthly Housing Costs and Burden", fig.height = 3}
 
 ### faceted by region
   cleanyearsmonthly %>%  
@@ -449,9 +456,16 @@ Figure 9: Burden based on Median housing cost with assistance
 #Conclusion: 
   
   The findings in this paper help elucidate income and household burden trends overtime. However, there are many holes in the actual data. The data grabbed uses gross incomes and groups data over large regions of the United States. While the spreads of incomes and housing costs may be low, the internal varation within each region will be fairly high. As a result, this does not help protray a full picture of burden level across the United States, namely in (sub)urban versus non urban areas. Also, the usage of gross income is inaccurate, as the median net income levels varied over time (even after adjusting for inflation), since taxation levels were much higher in the 1950s and 1960s than they are now- which means the burden levels are likely undervalued in the data during those decades. Also, the data provided is given in odd years, which prevents a complete analysis of housing affordability. 
-  
-    Ultimately, our findings point towards
+
+Ultimately, our findings point towards 
   
   Further analysis could involve predicting the trends for the burden and income data to corroborate whether or not a two year lag exists between the Northeast and the other regions following the financial meltdown. Also, adjusting income by cost of living would provide a better understanding of burden amongst differing regions. Regions could be further subsetted by town or district level to provide more granular data. 
 
+\newpage
+
+#Sources
+
+1. Snyder, Michael. "27 Depressing Facts About The Housing Crash That Never Seems To End." Business Insider. 2011. Accessed August 7, 2016. http://www.businessinsider.com/amazing-statistics-about-the-housing-crash-2011-3.
+
+2. 
 
