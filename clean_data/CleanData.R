@@ -41,29 +41,44 @@ RenameCols <- function(frame) {
          "METRO3" = `METRO`)
 }
 
-base_files <- paste("../raw_data/hads",          # Loading the most recent datasets 
-                c(seq(2003, 2013, by = 2)), # first to give reference for other
-                ".bz2",                     # two sets.
+NoQuotations <- function(x) {
+  # Removes quotes from input string x.
+  str_replace_all(x, "^\\'|\\'$", "")
+}
+# Total list of invalid values, done due to insufficient documentation.
+NA_LIST = c("","NA","-5","-6","-7","-9",".")
+# Loading the most recent datasets first to give reference for other
+# two sets.
+base_files <- paste("../raw_data/hads",          
+                c(seq(2003, 2013, by = 2)),  
+                ".bz2",                     
                 sep = "") %>%  
-  lapply(read_csv) %>% 
-  lapply(data.frame,  # Have to convert to data frames as lapply seems 
-         stringsAsFactors = F) #to recognize csv output as named lists.
-
-base_files <- mapply(MutateYears, # Need to distinguish different years
-                 base_files,     #for datasets, so add column to do just that.
+  lapply(read_csv, na=NA_LIST) %>% 
+  # Have to convert to data frames as lapply seems to recognize csv output 
+  # as named lists.
+  lapply(data.frame,   
+         stringsAsFactors = F)
+# Need to distinguish different years for datasets, so we add a column 
+# to do just that.
+base_files <- mapply(MutateYears, 
+                 base_files,     #
                  as.list(seq(2003, 2013, by = 2)))
 
-modified_year <- base_files[[4]] %>% # The 2009 dataset has an extra unspecified
-  select(-VCHRMOV)                  # column that we need to remove.
-modern_files <- rbind(do.call(rbind, # Combine all of the recent years into one.
+# The 2009 dataset has an extra unspecified column that we need to remove.
+modified_year <- base_files[[4]] %>% 
+  select(-VCHRMOV)      
+
+# Combine all of the recent years into one. 
+modern_files <- rbind(do.call(rbind, 
                             base_files[c(1, 2, 3, 5, 6)]), 
                     modified_year)
-
-first_decade <- paste("../raw_data/hads",             # Load first decade separately 
-                     c(seq(1985, 1995, by = 2)), # to account for missing 
-                     ".bz2",                     # columns and different 
-                     sep = "") %>%                # names.
-  lapply(read_csv) %>% 
+# Load first decade separately to account for missing columns and different 
+# names.
+first_decade <- paste("../raw_data/hads",             
+                     c(seq(1985, 1995, by = 2)), 
+                     ".bz2",               
+                     sep = "") %>%              
+  lapply(read_csv, na=NA_LIST) %>% 
   lapply(data.frame, stringsAsFactors = F) %>% 
   lapply(UpperCaseColNames) %>% 
   lapply(AddMissingCols) %>% # Need missing columns for completeness.
@@ -73,17 +88,18 @@ first_decade <- mapply(MutateYears,
                       first_decade, 
                       as.list(seq(1985, 1995, by = 2)), 
                       SIMPLIFY = FALSE) %>% 
+  # To properly bind the datasets, the data has to be in the same order.
   lapply(select_, 
-         .dots=names(modern_files)) # To properly bind the datasets, the data
+         .dots=names(modern_files)) 
 
-first_old_set <- do.call(rbind,      # has to be in the same order.
+first_old_set <- do.call(rbind,      
                         first_decade)
-
-second_decade <- paste("../raw_data/hads", #Same as above, except with no renaming.
+#Same as above, except with no renaming.
+second_decade <- paste("../raw_data/hads", 
                       c(seq(1997, 2001, by = 2)), 
                       ".bz2", 
                       sep ="") %>% 
-  lapply(read_csv) %>% 
+  lapply(read_csv, na=NA_LIST) %>% 
   lapply(data.frame, stringsAsFactors= F) %>% 
   lapply(UpperCaseColNames) %>% 
   lapply(AddMissingCols)
@@ -112,32 +128,21 @@ combined_years <- rbind(old_sets, modern_files)
 # Free some memory
 remove(old_sets, modern_files)
 
-
-NoQuotations <- function(x) {
-  str_replace_all(x, "^\\'|\\'$", "")
-}
-
 # Cleaning the data
 clean_years <- combined_years %>% 
   setNames(str_to_lower(names(.))) %>%  
   mutate_if(is.character, NoQuotations) %>%  
-  # Clean ownrent
+  # Refactoring ownrent data
   mutate(ownrent = factor(ownrent,   
                           levels = c("1", "2"), 
                           labels = c("own", "rent")),
          fmtburden = str_replace_all(fmtburden, "^[0-9] ", ""),
-         fmtstructuretype = str_replace_all(fmtstructuretype, "^[0-9] ", "")) %>%
-  na_if("") %>%
-  na_if("NA") %>%
-  na_if("-5") %>%
-  na_if("-6") %>%
-  na_if("-7") %>%
-  na_if("-9") %>%
-  na_if(".")
+         fmtstructuretype = str_replace_all(fmtstructuretype, "^[0-9] ", ""))
 
 # Free some memory
 remove(combined_years)
 
+# Set the seed to ensure reproducability
 set.seed(1337)  
 # Make a sample for demonstration purposes
 clean_sample <- sample_n(clean_years, 10000)
