@@ -1,12 +1,10 @@
 ---
 title: "Exploring United States Housing Affordability"
+author: "Nikolai Myllymäki,\nWilliam Paul,\nSriharsha Kondapally,\nLiam Shi"
 output: 
   pdf_document: 
-    fig_caption: yes
-    latex_engine: 
-header-includes:
-#- \usepackage{subfig}
-- \usepackage{subcaption}
+    fig_caption: no
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -49,7 +47,7 @@ library(ggthemes)
 
 ###Graphical findings
   
-```{r, echo = F, fig.cap="Median Burden across Years and Household sizes"}
+```{r, echo = F, fig.cap="median burden across years and household sizes"}
 clean_years <- read_csv("../clean_data/clean_years.csv")
 
   clean_years %>%
@@ -72,6 +70,9 @@ clean_years <- read_csv("../clean_data/clean_years.csv")
   theme_minimal(base_family = "serif")
 
 ```
+\begin{center}
+Figure 1: Median burden across years and household sizes
+\end{center}
 
   Figure 1 shows the development of median burden (proportion of housing costs relative to household income) from 1985 to 2013. The median burden varies dramatically between households of different sizes. The highest burden through the years has been on households of one person. This is understandable, since people living alone cannot split any costs between other earners.
   
@@ -153,6 +154,9 @@ us_map %>%
                         labels=function(x){paste0("$",
                                                   x %/% 100 / 10, "K")})
 ```
+\begin{center}
+Figure 2: Median Income Across Census Regions
+\end{center}
 
   To map income levels in different areas we used the four census regions in the dataset and joined them with a scraped table from mapsoftheworld.com. Using the table we could connect census regions to state names and thus colour a map of the continental US with census region incomes. We used median incomes instead of mean incomes to avoid skewing the results with outliers, and filtered the map to include the most recent year, 2013.
   
@@ -164,13 +168,6 @@ us_map %>%
 
 regionNames = c("1" = "Northeast", "2" = "Midwest", "3" = "South", "4" = "West")
 
-```
-
-\newpage
-
-```{r, echo = FALSE, fig.height=1, fig.cap='Median Adjusted Income per person (left) and per bedroom (right)'}
-
-ggplot() + theme(panel.background = element_rect(fill = 'white', colour = 'white'))
 ```
 
 ```{r, echo = FALSE, fig.width=3.5, fig.height=5, fig.cap='one plotthe other one'}
@@ -217,8 +214,9 @@ clean_years %>%
         axis.text.y = element_blank(),
         legend.position = "top")
 ```
-
+\begin{center}
 Figure 3: Median Adjusted Income per person (left) and per bedroom (right)
+\end{center}
 
   In order to better understand the regional differences in income, the incomes were adjusted by certain variables. 
   
@@ -271,6 +269,9 @@ Relative to Poverty Income") +
   scale_colour_brewer(palette = "Dark2") +
   theme_minimal(base_family = "serif") 
 ```
+\begin{center}
+Figure 4: Amount of households relative to poverty line
+\end{center}
 
   Figure 4 shows the amount of households in a given income group in a given year. Each household has been calculated a poverty treshold according to the Census Bureau’s official thresholds, based on family size and number of children. 
   
@@ -308,6 +309,9 @@ clean_years %>%
   theme_minimal(base_family = "serif")
 
 ```
+\begin{center}
+Figure 5: Relationship between Household Income and Burden
+\end{center}
 
   As pictured in figure 5, the relationship between household income and burden is seen as a positive correlation. From the graph, you can see that higher income household have less burden to deal with, which makes sense because those with more money are able to pay off monthly costs more easily. Those with 50% more burden are near the poverty line. Figure 5 also shows a spike in households that have burden. Households with higher incomes started to pay more burdens, which can be attributed to 2007 financial housing market crisis.
 
@@ -337,6 +341,9 @@ cleanyearsmonthly %>%
   theme_minimal(base_family = "serif")
 
 ```
+\begin{center}
+Figure 6: Relationship between Monthly Housing Costs and Burden
+\end{center}
 
   Figure 6 offers a more in-depth look at the relationship between housing costs and burden. It's interesting to see that all three burden lines are close to one another, which illustrates the principle that those with more money aren't buying more expensive houses. From figure 5 we saw that those with higher incomes have less burden, and those with lower incomes have higher burden. Each level of burden has similar housing costs, therefore reinforcing the idea that people are buying similar priced housing among the lower and middle classes. Again, a spike around 2010 is prevalent, which can be caused by the 2007 housing crisis. 
 
@@ -356,7 +363,9 @@ cleanyearsmonthly %>%
   theme_minimal(base_family = "serif")
 
 ```
-
+\begin{center}
+Figure 7: Relationship between Monthly Housing Costs and Burden in different regions
+\end{center}
 
   From figure 7 you can see that the Northeast and West have higher rates of burden at higher income levels, therefore illustrating how housing affordability in these regions are less than that of the Midwest and South.
 
@@ -382,6 +391,9 @@ clean_years %>%
 
 
 ```
+\begin{center}
+Figure 8: Income compared to area's median grouped by house type
+\end{center}
 
   Figure 8 charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wages increased, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
@@ -411,6 +423,9 @@ ggplot(assisted, aes(y = new_y,
   coord_flip() +
   theme_minimal(base_family = "serif")
 ```
+\begin{center}
+Figure 9: Burden based on Median housing cost with assistance
+\end{center}
 
  Further delving into the behavior of burden amongst the lower income workers, figure 9 shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who receive more assistance is higher than those who receive no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units. The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs.
  
