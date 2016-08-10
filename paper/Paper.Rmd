@@ -35,7 +35,7 @@ The main metric that is referred to in this paper is burden. Burden is defined b
 
 #Introduction
 
-The dataset was taken from the American Housing Survey (AHS), which derives sets of data from 1985 and on. The data set includes categorizing each housing unit by factors such as affordability, income through fair market rent, burden, and the adjusted median income. Certain factors, such as Poverty Income, is based on the Census Bureau's official thresholds. 
+The dataset was taken from the American Housing Survey (AHS), which derives sets of data from 1985 and on. The data set includes categorizing each housing unit by factors such as affordability, income through fair market rent, burden, and the adjusted median income. Certain factors, such as poverty income, is based on the Census Bureau's official thresholds. 
   
   The goal is to determine whether housing affordability has increased or decreased over the last few decades. Our initial hypothesis assumes that housing affordability within the United States has decreased due to key, significant events that have occurred within the last few years. The United State's growing income inequality can be attributed to the current state of housing affordability, and is a clear indicator of the shifting income brackets between who is poor and who is rich. Another major event that has potential consequences on the current state of housing affordability, is the 2007 Housing Market crash. According to Business Insider, the end of 2010 saw a staggering 23.1% of all U.S. homeowners with a mortgage owed more on their homes than what their homes were worth. ^1^ Amongst all of the foreclosures, loan defaults, and stock market crash, we will closely examine the years between 2007 and 2011 to capture a better sense of the status of the housing market's affordability.
 
@@ -296,7 +296,7 @@ Figure 4: Amount of households relative to poverty line
   
   Interestingly, the income brackets of 100%-200% stayed almost exactly the same size as before, while the increase in poverty was in effect solely the result of the dwindling of the highest (over 200% of poverty income) income bracket. A reasonable explanation would be the effect of increasing unemployment, with previously employed well-off people dropping to unemployment and thus small or no income. The reality can be more nuanced, with people dropping to the middle income groups and a simultaneous equally large movement from these brackets to poverty, but the big picture of large impacts in poverty following the financial crisis stays the same.
 
-```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden, fig.height = 1"}
+```{r, echo = FALSE, fig.cap="Relationship between Household Income and Burden, fig.height = 3"}
 ###### Household Income
   ####overall graph
 clean_years %>% 
@@ -330,8 +330,8 @@ clean_years %>%
 Figure 5: Relationship between Household Income and Burden
 \end{center}
 
-  As pictured in figure 5, the relationship between household income and burden is seen as a positive correlation. From the graph, you can see that higher income household have less burden to deal with, which makes sense because those with more money are able to pay off monthly costs more easily. Those with 50% more burden are near the poverty line. Figure 5 also shows a spike in households that have burden. Households with higher incomes started to pay more burdens, which can be attributed to 2007 financial housing market crisis.
-
+  As pictured in Figure 5, the relationship between household income and burden is seen as a positive correlation. The relatively higher household income brackets are shown to have lower burdens than the lower household income brackets. Because burden is a proportion of housing cost over income, it is reasonable to conclude that higher income households will have a smaller burden due to their larger incomes. The higher income households are able to pay off their monthly costs more easily. Although the federal poverty line differs between different sized households, the average poverty threshold for families of 3 or 4 persons is ranged from $20k to $25K. ^2^ From Figure 5, it is easily seen that those with 50% or More burden are near and/or underneath the poverty threshold. At the onset of the 21st century to 2010, there is a spike in 2007/2008 for the range of household income with the differing burden brackets. This spike can be attributed to the 2007 financial housing crisis, which ultimately affected the  burden levels of the housing sector. 
+  
 ```{r, echo = FALSE, fig.cap = "Relationship between Monthly Housing Costs and Burden", fig.height = 3}
 
 cleanyearsmonthly <- clean_years %>% 
@@ -344,7 +344,9 @@ cleanyearsmonthly <- clean_years %>%
 cleanyearsmonthly %>%  
   group_by_("year", "fmtburden") %>%  
   summarise_(new_y = as.formula(
-    paste0("~ median(","zsmhc", ", na.rm=T)"))) %>% 
+    paste0("~ median(",
+           "zsmhc", 
+           ", na.rm=T)"))) %>% 
   
   ggplot(aes_string(x = "year", 
                     y = "new_y", 
@@ -362,25 +364,29 @@ cleanyearsmonthly %>%
 Figure 6: Relationship between Monthly Housing Costs and Burden
 \end{center}
 
-At a certain point, regardless of income, housing costs stay the same because housing prices have increased  
-
-The no income line continues to have monthly housing costs due to people who lost their jobs, unemployment, trust fund recipients using their money, and people living off savings
-
-
-  Figure 6 offers a more in-depth look at the relationship between housing costs and burden. It's interesting to see that all three burden lines are close to one another, which illustrates the principle that those with more money aren't buying more expensive houses. From figure 5 we saw that those with higher incomes have less burden, and those with lower incomes have higher burden. Each level of burden has similar housing costs, therefore reinforcing the idea that people are buying similar priced housing among the lower and middle classes. Again, a spike around 2010 is prevalent, which can be caused by the 2007 housing crisis. 
+  Figure 6 offers a more in-depth look at the relationship between housing costs and burden. It's interesting to see that all three burden lines are close to one another, which illustrates the principle that those with more money aren't buying more expensive houses. From Figure 5, we saw that those with higher incomes have less burden, and those with lower incomes have higher burden. At a certain point, regardless of income, housing costs stay the same. For the "No Income" bracket, there are still monthly costs present. To account for this anomly, we assum that people who lost their jobs could still be paying these costs with zero income. Trust fund recipients and people living off savings could also be paying off these costs. Again, a spike around 2010 is prevalent, which can be explained by the 2007 housing crisis. 
 
 ```{r, echo= FALSE, fig.cap="Relationship between Monthly Housing Costs and Burden", fig.height = 3}
 
 ### faceted by region
   cleanyearsmonthly %>%  
-  group_by_("year","region", "fmtburden") %>%  
+  group_by_("year",
+            "region", 
+            "fmtburden") %>%  
   summarise_(new_y = as.formula(
-    paste0("~ median(","zsmhc", ",na.rm=T)"))) %>% 
-  ggplot(aes_string(x = "year", y = "new_y", color = "fmtburden")) + 
+    paste0("~ median(",
+           "zsmhc", 
+           ",na.rm=T)"))) %>% 
+  ggplot(aes_string(x = "year", 
+                    y = "new_y", 
+                    color = "fmtburden")) + 
   geom_line(size = 1) + 
-  facet_wrap(~region, labeller = as_labeller(regionNames)) + 
-  labs(y = "Monthly Housing Costs", x = "Year", color = "Burden") +
-  scale_y_continuous(labels=function(x){paste0("$", x)}) +
+  facet_wrap(~region, 
+             labeller = as_labeller(regionNames)) + 
+  labs(y = "Monthly Housing Costs", 
+       x = "Year", 
+       color = "Burden") +
+  scale_y_continuous(labels = function(x){paste0("$", x)}) +
   scale_colour_brewer(palette = "Dark2") +
   theme_minimal(base_family = "serif")
 
@@ -389,16 +395,20 @@ The no income line continues to have monthly housing costs due to people who los
 Figure 7: Relationship between Monthly Housing Costs and Burden in different regions
 \end{center}
 
-  From figure 7 you can see that the Northeast and West have higher rates of burden at higher income levels, therefore illustrating how housing affordability in these regions are less than that of the Midwest and South.
+  Figure 7 illustrates the monthly housing costs by census regions (Northeast, Midwest, South, and West). It is interesting to note that the Northeast and West have higher monthly housing costs according to the figure. According to Forbes, a majority of the most overpriced cities are located in these two regions. ^3^ Figure 2 also supports this idea because median income is highest in these two regions. There is an interesting dip seen in the Northeast graph, which can be attributed to the Northeast being impacted earlier by the housing crisis. 
 
 ```{r, fig.width=12, fig.height=6,echo = F, message=F,error=F, warning=FALSE, fig.cap = "Income compared to area's median grouped by house type"}
 clean_years %>% 
   filter(fmtstructuretype != ".") %>% 
       # Use NSE
-      group_by_("year", "fmtstructuretype") %>%  
+      group_by_("year", 
+                "fmtstructuretype") %>%  
       # Take the median instead of mean to avoid extreme observations skewing the 
       # result.
-      summarise_(new_y= as.formula(paste0("~ median(","increlamipct", ",na.rm=T)"))) %>%  
+      summarise_(new_y = as.formula(
+        paste0("~ median(",
+               "increlamipct", 
+               ",na.rm=T)"))) %>%  
       # Use NSE
       ggplot(aes_string(x = "year",   
                         y = "new_y",   
@@ -411,15 +421,14 @@ clean_years %>%
   scale_colour_brewer(palette = "Dark2") +
   theme_minimal(base_family = "serif")
 
-
 ```
 \begin{center}
-Figure 8: Income compared to area's median grouped by house type
+Figure 8: Income Compared to Area's Median Grouped by House Type
 \end{center}
 
   Figure 8 charts a time series showing how the typical income for various types of households such as single family or apartment buildings changed over the years. One major trend is that typical income of all housing types except single family homes compared to their area has fallen, accelerating after 2007. However, incomes of single family homes, barring the housing crash in 2007, have been centered on the area's median income. There are a couple of possible explanations for this disparity. The first is that, with the growth of wages, more people could afford single family homes and thus leave the buildings with higher numbers of units. As wages increased, the area's median income also grew, and so, combined with higher waged workers moving into single family houses, single family homes remained constant while all other types shrunk proportionally. This would also explain the acceleration after the housing crisis, as single family homes became much cheaper temporarily and thus allow more workers to obtain single family housing. The second explanation is that as time went on, supply of housing increased, driving prices down and allowing lower waged laborers to obtain homes. Due to the purchasing power of higher wage laborers however, single family houses, even with their falling prices, were more difficult to obtain as time went on, and thus lower wage workers had to settle for other types of housing. 
 
-```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE, fig.cap="Burden based on Median housing cost with assistance"}
+```{r, fig.width=12, fig.height=6, echo = F, message=F,error=F, warning=FALSE, fig.cap="Burden based on Median Housing Cost with Assistance"}
 assisted = clean_years %>% filter(!is.na(assisted)) %>% 
       # Use NSE
       group_by_("assisted", "fmtcostmedrelamicat") %>%  
@@ -452,14 +461,16 @@ Figure 9: Burden based on Median housing cost with assistance
  Further delving into the behavior of burden amongst the lower income workers, figure 9 shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs. At initial observation, the burden of those who receive more assistance is higher than those who receive no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units. The plot shows how burden changes as a result of assistance based on what percentage of the area median income is their monthly housing costs.
  
  At initial observation, the burden of those who recieve more assistance is higher than those who recieve no assistance. This clearly makes sense, as those who need assistance are typically people who've lost their job or had some monetary crisis that would reduce their total salary. However, although assistance has around the same effect for most cost brackets, the households that have excessively high costs for their area have vastly higher burdens with assistance than all other brackets. One explanation for this is that those who purchase expensive houses in their area typically have higher salaries, and if they lose those salaries and require assistance they have to support the cost of the house. Also, single family homeowners have significantly less mobility so if they have a financial crisis they cannot easily transition to cheaper housing as opposing to those with rental properties typical of a larger number of units.
+ 
+ \newpage
 
 #Conclusion: 
   
   The findings in this paper help elucidate income and household burden trends overtime. However, there are many holes in the actual data. The data grabbed uses gross incomes and groups data over large regions of the United States. While the spreads of incomes and housing costs may be low, the internal varation within each region will be fairly high. As a result, this does not help protray a full picture of burden level across the United States, namely in (sub)urban versus non urban areas. Also, the usage of gross income is inaccurate, as the median net income levels varied over time (even after adjusting for inflation), since taxation levels were much higher in the 1950s and 1960s than they are now- which means the burden levels are likely undervalued in the data during those decades. Also, the data provided is given in odd years, which prevents a complete analysis of housing affordability. 
 
-Ultimately, our findings point towards 
-  
-  Further analysis could involve predicting the trends for the burden and income data to corroborate whether or not a two year lag exists between the Northeast and the other regions following the financial meltdown. Also, adjusting income by cost of living would provide a better understanding of burden amongst differing regions. Regions could be further subsetted by town or district level to provide more granular data. 
+Ultimately, our findings point towards the idea that housing affordability has decreased since the mid 80s. Although many graphs illustrate a dip in burden, this does not negate the overarching idea that housing affordability has decreased. According to Investopedia, major consequences of the mortgage crisis include chronically higher unemployment and smaller chances of getting loans and credit. The housing bubble has had effects on a long-term scale, where in 2009, there was a 38% increase in Americans filing for bankruptcy since 2007. ^4^ We conclude that the 2007 housing crisis is one of the most significant factors in causing the overall decrease in housing affordability. 
+
+Further analysis could involve predicting the trends for the burden and income data to corroborate whether or not a two year lag exists between the Northeast and the other regions following the financial meltdown. Also, adjusting income by cost of living would provide a better understanding of burden amongst differing regions. Regions could be further subsetted by town or district level to provide more granular data. 
 
 \newpage
 
@@ -467,5 +478,11 @@ Ultimately, our findings point towards
 
 1. Snyder, Michael. "27 Depressing Facts About The Housing Crash That Never Seems To End." Business Insider. 2011. Accessed August 7, 2016. http://www.businessinsider.com/amazing-statistics-about-the-housing-crash-2011-3.
 
-2. 
+2. "Poverty Guidelines." ASPE. 2015. Accessed August 3, 2016. https://aspe.hhs.gov/poverty-guidelines.
+
+3. "America's Most Overpriced Cities In 2015." Forbes. Forbes, 4 Mar. 2015. Web. 5 Aug. 2016. https://.forbes.com/sites/erincarlyle/.../americas-most-overpriced-cities-in-2015/.
+
+4. "5 Consequences Of The Mortgage Crisis." Investopedia. N.p., 21 Nov. 2010. Web. 9 Aug. 2016. http://investopedia.com/financial-edge/1110/5-consequences-of-the-mortgage-crisis.aspx
+
+
 
